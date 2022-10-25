@@ -12,3 +12,6 @@ ansible/playbooks/ansible_artifacts/
 
 # Vim
 *.swp
+
+# Keys
+*.pem
