@@ -35,7 +35,7 @@
   when: not mariadb_apt_list_script.stat.exists
 
 - name: install mariadb-server
+  become: true
   ansible.builtin.apt:
-    become: true
     name: "{{ mariadb_packages }}"
     update_cache: true
