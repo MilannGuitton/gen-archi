@@ -1,0 +1,16 @@
+mariadb_pre_req_packages:
+  - "curl"
+  - "apt-transport-https"
+  - "software-properties-common"
+  - "rsync"
+  - "lsb-release"
+  - "ca-certificates"
+  - "gnupg2"
+
+mariadb_apt_list_script_url:
+  "https://downloads.mariadb.com/MariaDB/mariadb_repo_setup"
+
+mariadb_apt_list_script_path: "/tmp/mariadb_repo_setup"
+
+mariadb_packages:
+  - "mariadb-server"
