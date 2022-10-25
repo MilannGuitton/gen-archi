@@ -16,14 +16,14 @@
     login_unix_socket: /var/run/mysqld/mysqld.sock
     name: tryhard
     host: '%'
-    password: 1234
+    password: "1234"
     priv: '*.*:ALL,GRANT'
 
 - name: Create a new database with name 'mariondb'
   community.mysql.mysql_db:
     check_implicit_admin: yes
     login_user: tryhard
-    login_password: 1234
+    login_password: "1234"
     name: mariondb
     state: present
     login_unix_socket: /var/run/mysqld/mysqld.sock
