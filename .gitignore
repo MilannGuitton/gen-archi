@@ -10,8 +10,9 @@ cache/
 # Ansible
 ansible/playbooks/ansible_artifacts/
 
-# Vim
+# Text editors
 *.swp
+*.vscode
 
 # Keys
 *.pem
