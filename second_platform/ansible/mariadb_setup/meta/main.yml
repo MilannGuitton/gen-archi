@@ -1,0 +1,16 @@
+galaxy_info:
+  author: "Milann Guitton"
+  description: Setup a mariadb database
+  company: TryHard
+
+  license: MIT
+
+  min_ansible_version: 2.1
+
+  galaxy_tags:
+    - database
+    - sql
+    - galera
+    - mariadb
+
+dependencies: []

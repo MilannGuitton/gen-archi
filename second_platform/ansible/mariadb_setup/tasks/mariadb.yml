@@ -1,0 +1,41 @@
+---
+- name: update package list
+  ansible.builtin.apt:
+    update_cache: true
+    cache_valid_time: 3600
+  become: true
+
+- name: installing pre-reqs
+  ansible.builtin.apt:
+    name: "{{ mariadb_pre_req_packages }}"
+    state: "present"
+  become: true
+  retries: 10
+  delay: 30
+  register: result
+  until: result is not failed
+  loop:
+
+- name: check for mariadb apt source list
+  stat: "path=/etc/apt/sources.list.d/mariadb.list"
+  register: mariadb_apt_list_script
+
+- name: get apt source list setup script
+  ansible.builtin.get_url:
+    url: "{{ mariadb_apt_list_script_url }}"
+    dest: "{{ mariadb_apt_list_script_path }}"
+    mode: '0664'
+  when: not mariadb_apt_list_script.stat.exists
+
+- name: run apt source list setup for mariadb-server {{ mariadb_version }}
+  shell:
+    cmd: >-
+      sudo bash "{{ mariadb_apt_list_script_path }}"
+      --mariadb-server-version=10.7
+  when: not mariadb_apt_list_script.stat.exists
+
+- name: install mariadb-server
+  ansible.builtin.apt:
+    become: true
+    name: "{{ mariadb_packages }}"
+    update_cache: true

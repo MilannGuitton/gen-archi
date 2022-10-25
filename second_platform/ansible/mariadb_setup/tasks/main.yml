@@ -1,0 +1,15 @@
+---
+- name: get installed package information
+  package_facts:
+    manager: "auto"
+
+- name: Check if Mariadb version 10.7 is installed (skipping if not)
+  ansible.builtin.debug:
+    msg: "Mariadb version 10.7 found !
+    {{ ansible_facts.packages['mariadb-server-10.7'] }}"
+  when: "'mariadb-server-10.7' in ansible_facts.packages"
+
+- import_tasks: mariadb.yml
+  when: "not 'mariadb-server-10.7' in ansible_facts.packages"
+
+- import_tasks: user_setup.yml

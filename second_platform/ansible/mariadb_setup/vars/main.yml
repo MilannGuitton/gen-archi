@@ -1,3 +1,5 @@
+---
+# vars file for mariadb_setup
 mariadb_pre_req_packages:
   - "curl"
   - "apt-transport-https"
