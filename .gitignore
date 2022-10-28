@@ -12,3 +12,4 @@ ansible/playbooks/ansible_artifacts/
 
 # Vim
 *.swp
+*.vscode
