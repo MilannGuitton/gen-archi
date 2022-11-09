@@ -28,9 +28,10 @@
   when: not mariadb_apt_list_script.stat.exists
 
 - name: run apt source list setup for mariadb-server {{ mariadb_version }}
+  become: true
   shell:
     cmd: >-
-      sudo bash "{{ mariadb_apt_list_script_path }}"
+      bash "{{ mariadb_apt_list_script_path }}"
       --mariadb-server-version=10.7
   when: not mariadb_apt_list_script.stat.exists
 
