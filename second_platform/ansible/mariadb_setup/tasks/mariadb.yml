@@ -27,6 +27,7 @@
     mode: '0664'
   when: not mariadb_apt_list_script.stat.exists
 
+
 - name: run apt source list setup for mariadb-server {{ mariadb_version }}
   become: true
   shell:
@@ -40,3 +41,17 @@
   ansible.builtin.apt:
     name: "{{ mariadb_packages }}"
     update_cache: true
+
+- name: Allow remote connection
+  become: true
+  ansible.builtin.lineinfile:
+    path: '/etc/mysql/my.cnf'
+    state: present
+    line: 'bind-address = 0.0.0.0'
+    insertbefore: EOF
+
+- name: restart mariadb service
+  become: true
+  ansible.builtin.systemd:
+    name: mariadb
+    state: restarted
