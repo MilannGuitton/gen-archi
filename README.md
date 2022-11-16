@@ -25,8 +25,16 @@ terraform apply
 
 ## MariaDB
 
-To setup a setup a database on the remote VM, you need to run the ansible role. To do this, go to the `second_platform/ansible/mariadb` directory and run:
+To setup a setup a database on the remote VM, you need to run the ansible role. To do this, go to the `second_platform/ansible` directory and run:
 
 ```bash
-ansible-playbook mariadb_setup.yml
+ansible-playbook mariadb/mariadb_setup.yml
+```
+
+## Backup script
+
+The backup script is necessary to create copies of the database. This process is automated with ansible. To run it, go to the `ansible` directory:
+
+```bash
+ansible-playbook backup/backup.yml
 ```
