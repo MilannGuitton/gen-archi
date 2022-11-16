@@ -16,10 +16,6 @@ You can then retrieve the state by running:
 
 ```bash
 terraform init
-```
-
-
-```bash
 terraform apply
 ```
 
