@@ -2,35 +2,11 @@
 
 The goal of this project is to implement and automatically deploy  Second and Third platfoms (IDC).
 
-## Terrraform
+## Second platform
 
-You will need to be in the `terraform/` directory of the platform you want to deploy.
+This infratructure is deployed using [Terraform for AWS](https://registry.terraform.io/providers/hashicorp/aws/latest) and its configuration is done using [Ansible](https://docs.ansible.com/)
 
-The tfstate file is in a shared S3 bucket. To use it, you first need to set your AWS profile to the one of the TryHard organisation. For example:
-
+At the root of the `second_platform` directory is a script to automate the deployment of the infrastructure. Possible options are documented here:
 ```bash
-export AWS_PROFILE="TRYHARD"
-```
-
-You can then retrieve the state by running:
-
-```bash
-terraform init
-terraform apply
-```
-
-## MariaDB
-
-To setup a setup a database on the remote VM, you need to run the ansible role. To do this, go to the `second_platform/ansible` directory and run:
-
-```bash
-ansible-playbook mariadb/mariadb_setup.yml
-```
-
-## Backup script
-
-The backup script is necessary to create copies of the database. This process is automated with ansible. To run it, go to the `ansible` directory:
-
-```bash
-ansible-playbook backup/backup.yml
+bash deploy.sh -h
 ```
