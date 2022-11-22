@@ -1,6 +1,6 @@
 # GEN-ARCHI
 
-The goal of this project is to implement and automatically deploy  Second and Third platfoms (IDC).
+The goal of this project is to implement and automatically deploy  Second and Third platfoms ([IDC](https://en.wikipedia.org/wiki/Third_platform)).
 
 ## Second platform
 
