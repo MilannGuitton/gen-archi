@@ -23,6 +23,7 @@ TERRAFORM_FOLDER="terraform"
 ANSIBLE_FOLDER="ansible"
 MARIADB_SETUP_SCRIPT="mariadb/mariadb_setup.yml"
 BACKUP_SCRIPT="backup/backup.yml"
+FRONT_SCRIPT="front/front.yml"
 AWS_PROFILE="TRYHARD"
 BASTION_IP="35.181.111.83"
 SSH_HOSTS_FILE="$HOME/.ssh/known_hosts"
@@ -49,6 +50,7 @@ run_ansible() {
     echo "$keyscan" >> "$SSH_HOSTS_FILE"
     ansible-playbook "$MARIADB_SETUP_SCRIPT"
     ansible-playbook "$BACKUP_SCRIPT"
+    ansible-playbook "$FRONT_SCRIPT"
     cd ..
 }
 

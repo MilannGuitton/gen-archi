@@ -1,0 +1,15 @@
+---
+- hosts: frontend
+  tasks:
+      - name: ensure nginx is at the latest version
+        become: true
+        apt: name=nginx state=latest
+      - name: Copy file to remote host
+        become: true
+        ansible.builtin.copy:
+            src: ./../../../app/frontend/
+            dest: /var/www/html
+      - name: start nginx
+        service:
+            name: nginx
+            state: started
