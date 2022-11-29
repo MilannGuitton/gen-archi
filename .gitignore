@@ -17,3 +17,5 @@ ansible/playbooks/ansible_artifacts/
 
 # Keys
 *.pem
+
+app/backend/mariadb
