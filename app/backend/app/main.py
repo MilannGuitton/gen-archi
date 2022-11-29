@@ -1,8 +1,5 @@
-from typing import Union
-
 from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
 from fastapi import Request
 import mariadb
 import sys
@@ -37,20 +34,8 @@ try:
 except mariadb.Error as e: 
     print(f"Error: {e}")
 
-import csv
-
-class List(BaseModel):
-    name: str
-    score: int
-
-
-mylist = "0"
-
 @app.get("/")
 def read_root():
-    '''f = open("../list.csv", "r")
-    print(f.readlines())
-    return 0'''
     try:
         cur.execute("SELECT * FROM scores")
         for (id, name, score) in cur:
@@ -62,10 +47,6 @@ def read_root():
 @app.post('/')
 async def main(request: Request):
     res = await request.json()
-    '''with open('../list.csv', 'a', newline='') as csvfile:
-        spamwriter = csv.writer(csvfile, delimiter=' ',
-                                quotechar='|', quoting=csv.QUOTE_MINIMAL)
-        spamwriter.writerow([res["name"], res["score"]])'''
     try:
         print("DEBUG: ", res["name"], res["score"])
         cur.execute("INSERT INTO scores (name, score) VALUES (?, ?)", (res["name"], res["score"]))
