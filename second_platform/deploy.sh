@@ -27,6 +27,8 @@ FRONT_SCRIPT="front/front.yml"
 AWS_PROFILE="TRYHARD"
 BASTION_IP="35.181.111.83"
 SSH_HOSTS_FILE="$HOME/.ssh/known_hosts"
+RETRIES=10
+
 
 
 ################################################################################
@@ -48,6 +50,21 @@ run_ansible() {
         exit 1
     fi
     echo "$keyscan" >> "$SSH_HOSTS_FILE"
+
+    for i in $(seq 1 $RETRIES); do
+        echo "Try $i/$RETRIES"
+        ansible -m ping all
+        if [ $? -eq 0 ]; then
+            break
+        fi
+        sleep 5
+    done
+
+    if [ $i -eq $RETRIES ]; then
+        echo "One or more hosts are unreachable. Did you forget to run terraform ?"
+        exit 1
+    fi
+
     ansible-playbook "$MARIADB_SETUP_SCRIPT"
     ansible-playbook "$BACKUP_SCRIPT"
     ansible-playbook "$FRONT_SCRIPT"
