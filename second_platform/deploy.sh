@@ -43,6 +43,8 @@ deploy_terraform() {
 }
 
 run_ansible() {
+    echo "Waiting for hosts to be ready..."
+    sleep 10
     cd "$ANSIBLE_FOLDER"
     keyscan=`ssh-keyscan -H $BASTION_IP`
     if [ -z "$keyscan" ]; then
@@ -50,20 +52,6 @@ run_ansible() {
         exit 1
     fi
     echo "$keyscan" >> "$SSH_HOSTS_FILE"
-
-    for i in $(seq 1 $RETRIES); do
-        echo "Try $i/$RETRIES"
-        ansible -m ping all
-        if [ $? -eq 0 ]; then
-            break
-        fi
-        sleep 5
-    done
-
-    if [ $i -eq $RETRIES ]; then
-        echo "One or more hosts are unreachable. Did you forget to run terraform ?"
-        exit 1
-    fi
 
     ansible-playbook "$MARIADB_SETUP_SCRIPT"
     ansible-playbook "$BACKUP_SCRIPT"
