@@ -20,9 +20,9 @@ app.add_middleware(
 
 try:
     conn = mariadb.connect(
-        user="tryhard",
-        password="1234",
-        host="10.0.0.30",
+        user="user",
+        password="mypassword",
+        host="127.0.0.1",
         port=3306,
         database="mariondb"
     )
@@ -52,7 +52,7 @@ def read_root():
     print(f.readlines())
     return 0'''
     try:
-        cur.execute("SELECT * FROM test")
+        cur.execute("SELECT * FROM scores")
         for (id, name, score) in cur:
             print(f"ID: {id}, Name: {name}, Score: {score}")
     except mariadb.Error as e:
@@ -67,7 +67,8 @@ async def main(request: Request):
                                 quotechar='|', quoting=csv.QUOTE_MINIMAL)
         spamwriter.writerow([res["name"], res["score"]])'''
     try:
-        cur.execute("INSERT INTO scores VALUES ('{}', {})".format(res["name"], res["score"]))
+        print("DEBUG: ", res["name"], res["score"])
+        cur.execute("INSERT INTO scores (name, score) VALUES (?, ?)", (res["name"], res["score"]))
     except mariadb.Error as e: 
         print(f"Error: {e}")
     return await request.json()
