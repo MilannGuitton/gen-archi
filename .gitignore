@@ -13,6 +13,7 @@ ansible/playbooks/ansible_artifacts/
 # Text editors
 *.swp
 *.vscode
+*.idea
 
 # Keys
 *.pem
