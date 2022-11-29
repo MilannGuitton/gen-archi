@@ -1,0 +1,15 @@
+version: '3.3'
+services:
+  database:
+    image: 'mariadb:10.7'
+    container_name: database
+    restart: always
+    environment:
+      - MYSQL_USER=user
+      - MYSQL_PASSWORD=mypassword
+      - MYSQL_DATABASE=mariondb
+      - MYSQL_ROOT_PASSWORD=rootpassword     
+    ports:
+        - '3306:3306'
+    volumes:
+        - ${PWD}/mariadb/:/var/lib/mysql/
