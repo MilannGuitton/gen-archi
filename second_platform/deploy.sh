@@ -24,6 +24,7 @@ ANSIBLE_FOLDER="ansible"
 MARIADB_SETUP_SCRIPT="mariadb/mariadb_setup.yml"
 BACKUP_SCRIPT="backup/backup.yml"
 FRONT_SCRIPT="front/front.yml"
+BACK_SCRIPT="back/back.yml"
 AWS_PROFILE="TRYHARD"
 BASTION_IP="13.36.46.172"
 SSH_HOSTS_FILE="$HOME/.ssh/known_hosts"
@@ -56,6 +57,7 @@ run_ansible() {
     ansible-playbook "$MARIADB_SETUP_SCRIPT"
     ansible-playbook "$BACKUP_SCRIPT"
     ansible-playbook "$FRONT_SCRIPT"
+    ansible-playbook "$BACK_SCRIPT"
     cd ..
 }
 

@@ -1,0 +1,25 @@
+---
+- hosts: backend
+  tasks:
+      - name: Copy file to remote host
+        become: true
+        ansible.builtin.copy:
+            src: ./../../../app/backend/
+            dest: /home/ubuntu/backend
+      - name: install python3
+        become: true
+        apt: name=python3
+      - name: install pip
+        become: true
+        apt: name=python3-pip
+      - name: install libmariadb3
+        become: true
+        apt: name=libmariadb3
+      - name: install libmariadb-dev
+        become: true
+        apt: name=libmariadb-dev
+      - name: Install specified Python requirements
+        ansible.builtin.pip:
+            requirements: /home/ubuntu/backend/requirements.txt
+      - name: Run fastapi app with uvicorn
+        ansible.builtin.shell: uvicorn app:main --reload --port 5000 &
