@@ -1,7 +1,7 @@
 # -------------------------------------------------------- Network session --- #
 
 data "aws_eip" "public_ip" {
-  public_ip = "35.181.111.83"
+  public_ip = "13.36.46.172"
 }
 
 resource "aws_eip_association" "associate_front" {
