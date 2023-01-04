@@ -23,3 +23,7 @@ variable "cloudfront_description" {
   type    = string
   default = "Static Site"
 }
+
+variable "static_website_path" {
+  type = string
+}
