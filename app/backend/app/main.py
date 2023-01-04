@@ -17,9 +17,9 @@ app.add_middleware(
 
 try:
     conn = mariadb.connect(
-        user="user",
-        password="mypassword",
-        host="127.0.0.1",
+        user="tryhard",
+        password="1234",
+        host="10.0.0.30",
         port=3306,
         database="mariondb"
     )

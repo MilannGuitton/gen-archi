@@ -2,3 +2,4 @@ fastapi==0.88.0
 pydantic==1.10.2
 uvicorn[standard]==0.20.0
 mariadb==1.1.5.post3
+gunicorn[standard]==20.1.0
