@@ -53,3 +53,7 @@ async def main(request: Request):
     except mariadb.Error as e: 
         print(f"Error: {e}")
     return await request.json()
+
+@app.get('/health')
+def health():
+    return {"status": "ok"}
