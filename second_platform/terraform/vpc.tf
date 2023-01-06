@@ -1,6 +1,6 @@
-# ------------------------------------------------------------ VPC Section --- #
+# ------------------------------------------------------------ VPC section --- #
 
-# --------------------------------------------------------- Locals Section --- #
+# --------------------------------------------------------- Locals section --- #
 
 locals {
   vpc_cidr    = "10.0.0.0/16"
@@ -14,7 +14,7 @@ locals {
 module "vpc" {
   source = "terraform-aws-modules/vpc/aws"
 
-  name = "vpc-SIGL"
+  name = "vpc-tryhard"
   cidr = local.vpc_cidr
 
   azs = local.vpc_azs
@@ -25,9 +25,14 @@ module "vpc" {
     cidrsubnet(local.vpc_cidr, 4, 4),
   ]
 
+  private_subnets = [
+    cidrsubnet(local.vpc_cidr, 4, 1),
+    cidrsubnet(local.vpc_cidr, 4, 3),
+    cidrsubnet(local.vpc_cidr, 4, 5),
+  ]
+
   enable_nat_gateway     = true
-  single_nat_gateway     = false
-  one_nat_gateway_per_az = false
+  single_nat_gateway     = true
 
   enable_vpn_gateway = false
 

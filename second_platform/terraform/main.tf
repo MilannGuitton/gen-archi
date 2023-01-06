@@ -10,7 +10,7 @@ terraform {
   }
 
   backend "s3" {
-    bucket = "terraform-tfstate-gen-archi"
+    bucket = "terraform-tfstate-gen-archi/infra/"
     key    = "terraform.tfstate"
     region = "eu-west-3"
   }
