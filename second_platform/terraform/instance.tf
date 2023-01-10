@@ -6,9 +6,9 @@ locals {
   image_id           = "ami-0493936afbe820b28"
   instance_type      = "t2.micro"
   front_ips          = ["10.0.0.10", "10.0.32.10", "10.0.64.10"]
-  back_ip           = "10.0.0.20"
-  db_ip             = "10.0.0.30"
-  monitor_ip        = "10.0.0.40"
+  back_ips           = ["10.0.0.20", "10.0.32.20", "10.0.64.20"]
+  db_ip              = "10.0.0.30"
+  monitor_ip         = "10.0.0.40"
   frontend_user_data = file("./frontend-cloud-init.yml")
   bastion_user_data  = file("./bastion-cloud-init.yml")
 
@@ -57,7 +57,7 @@ resource "aws_instance" "frontend" {
   ]
 
   tags = {
-    Name      = "Frontend-${count.index}",
+    Name      = "Frontend-${count.index + 1}",
     Terraform = "true"
   }
 }
@@ -66,20 +66,21 @@ resource "aws_instance" "frontend" {
 # ---------------------------------------------------------------- Backend --- #
 
 resource "aws_instance" "backend" {
+  count         = 3
   ami           = local.image_id
   instance_type = local.instance_type
   key_name      = aws_key_pair.kp_sigl_admin.key_name
   user_data     = local.backend_user_data
 
-  subnet_id  = module.vpc.public_subnets[0]
-  private_ip = local.back_ip
+  subnet_id  = module.vpc.public_subnets[count.index]
+  private_ip = local.back_ips[count.index]
 
   vpc_security_group_ids = [
     aws_security_group.allow_all.id
   ]
 
   tags = {
-    Name      = "Backend",
+    Name      = "Backend-${count.index + 1}",
     Terraform = "true"
   }
 }
