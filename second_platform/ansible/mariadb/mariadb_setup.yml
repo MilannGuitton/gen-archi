@@ -1,5 +1,5 @@
 ---
-- hosts: mariadb_database
+- hosts: database
   remote_user: root
   roles:
     - "mariadb_setup"
