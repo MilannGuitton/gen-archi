@@ -31,8 +31,8 @@ module "vpc" {
     cidrsubnet(local.vpc_cidr, 4, 5),
   ]
 
-  enable_nat_gateway     = true
-  single_nat_gateway     = true
+  enable_nat_gateway = true
+  single_nat_gateway = true
 
   enable_vpn_gateway = false
 
