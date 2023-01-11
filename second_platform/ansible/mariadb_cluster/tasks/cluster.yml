@@ -1,0 +1,47 @@
+---
+- name: Stop service mariadb
+  become: true
+  ansible.builtin.systemd:
+    name: "{{ mariadb_systemd_service_name }}"
+    state: stopped
+
+- name: Comment bind-address setup if present
+  become: true
+  lineinfile:
+    path: "{{ mariadb_confs_path }}/50-server.cnf"
+    regexp: '^bind-address*'
+    line: "#"
+
+- name: Copy galera config file
+  become: true
+  ansible.builtin.template:
+    src: galera_config.j2
+    dest: "{{ mariadb_confs_path }}/60-galera.cnf"
+    mode: '0644'
+
+- name: Start galera_new_cluster
+  become: true
+  shell:
+    cmd: galera_new_cluster
+  when: inventory_hostname == 'database_3'
+
+- name: Start service mariadb
+  become: true
+  ansible.builtin.systemd:
+    name: "{{ mariadb_systemd_service_name }}"
+    state: started
+  when: inventory_hostname == 'database_3'
+
+- name: Start service mariadb
+  become: true
+  systemd:
+    name: "{{ mariadb_systemd_service_name }}"
+    state: started
+
+- name: setup_cluster | marking node as configured for galera cluster
+  file:
+    path: "/etc/galera_cluster_configured"
+    state: "touch"
+    mode: "0644"
+  become: true
+  when: not galera_cluster_configured.stat.exists

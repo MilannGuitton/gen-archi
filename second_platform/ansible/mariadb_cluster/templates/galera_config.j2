@@ -1,0 +1,20 @@
+[galera]
+binlog_format=ROW
+default-storage-engine=innodb
+innodb_autoinc_lock_mode=2
+bind-address=0.0.0.0
+
+# Galera Provider Configuration
+wsrep_on=ON
+wsrep_provider={{ galera_wsrep_provider }}
+
+# Galera Cluster Configuration
+wsrep_cluster_name="{{ galera_wsrep_cluser_name }}"
+wsrep_cluster_address="gcomm://{% for host in groups['database'] %}{{ hostvars[host]['ansible_default_ipv4']['address'] }},{% endfor %}"
+
+# Galera Synchronization Configuration
+wsrep_sst_method=rsync
+
+# Galera Node Configuration
+wsrep_node_address="{{ ansible_default_ipv4["address"] }}"
+wsrep_node_name="{{ ansible_hostname }}"

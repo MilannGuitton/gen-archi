@@ -1,5 +1,4 @@
 ---
-# vars file for mariadb_setup
 mariadb_pre_req_packages:
   - "curl"
   - "apt-transport-https"
@@ -16,3 +15,8 @@ mariadb_apt_list_script_path: "/tmp/mariadb_repo_setup"
 
 mariadb_packages:
   - "mariadb-server"
+
+mariadb_systemd_service_name: "mariadb"
+mariadb_confs_path: "/etc/mysql/mariadb.conf.d"
+
+galera_wsrep_provider: "/usr/lib/galera/libgalera_smm.so"

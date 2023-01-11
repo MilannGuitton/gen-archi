@@ -16,14 +16,16 @@
     login_unix_socket: /var/run/mysqld/mysqld.sock
     name: tryhard
     host: '%'
-    password: "1234"
+    password: 1234
     priv: '*.*:ALL,GRANT'
+  when: inventory_hostname == 'database_1'
 
 - name: Create a new database with name 'mariondb'
   community.mysql.mysql_db:
     check_implicit_admin: yes
-    login_user: tryhard
-    login_password: "1234"
+    login_user: client
+    login_password: 1234
     name: mariondb
     state: present
     login_unix_socket: /var/run/mysqld/mysqld.sock
+  when: inventory_hostname == 'database_1'

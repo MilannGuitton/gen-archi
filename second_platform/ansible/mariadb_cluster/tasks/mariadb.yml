@@ -14,7 +14,6 @@
   delay: 30
   register: result
   until: result is not failed
-  loop:
 
 - name: check for mariadb apt source list
   stat: "path=/etc/apt/sources.list.d/mariadb.list"
@@ -41,14 +40,6 @@
   ansible.builtin.apt:
     name: "{{ mariadb_packages }}"
     update_cache: true
-
-- name: Allow remote connection
-  become: true
-  ansible.builtin.lineinfile:
-    path: '/etc/mysql/my.cnf'
-    state: present
-    line: 'bind-address = 0.0.0.0'
-    insertbefore: EOF
 
 - name: restart mariadb service
   become: true

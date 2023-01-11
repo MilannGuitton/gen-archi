@@ -5,11 +5,18 @@
 
 - name: Check if Mariadb version 10.7 is installed (skipping if not)
   ansible.builtin.debug:
-    msg: "Mariadb version 10.7 found !
-    {{ ansible_facts.packages['mariadb-server-10.7'] }}"
+    msg: "Mariadb version 10.7 found ! {{ ansible_facts.packages['mariadb-server-10.7'] }}"
   when: "'mariadb-server-10.7' in ansible_facts.packages"
 
 - import_tasks: mariadb.yml
   when: "not 'mariadb-server-10.7' in ansible_facts.packages"
+
+- name: setup_cluster | checking if galera cluster already configured
+  stat:
+    path: "/etc/galera_cluster_configured"
+  register: "galera_cluster_configured"
+
+- import_tasks: cluster.yml
+  when: not galera_cluster_configured.stat.exists
 
 - import_tasks: user_setup.yml

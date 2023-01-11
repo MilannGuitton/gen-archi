@@ -21,7 +21,7 @@ print_help() {
 
 TERRAFORM_FOLDER="terraform"
 ANSIBLE_FOLDER="ansible"
-MARIADB_SETUP_SCRIPT="mariadb/mariadb_setup.yml"
+MARIADB_CLUSTER_SCRIPT="mariadb/mariadb_setup.yml"
 BACKUP_SCRIPT="backup/backup.yml"
 FRONT_SCRIPT="front/front.yml"
 BACK_SCRIPT="back/back.yml"
@@ -54,7 +54,7 @@ run_ansible() {
     fi
     echo "$keyscan" >> "$SSH_HOSTS_FILE"
 
-    ansible-playbook "$MARIADB_SETUP_SCRIPT"
+    ansible-playbook "$MARIADB_CLUSTER_SCRIPT"
     ansible-playbook "$BACKUP_SCRIPT"
     ansible-playbook "$FRONT_SCRIPT"
     ansible-playbook "$BACK_SCRIPT"
