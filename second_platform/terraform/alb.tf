@@ -1,6 +1,6 @@
 # ------------------------------------------------------------ ALB section --- #
 
-# ------------------------------------------------------------Frontend ALB --- #
+# ----------------------------------------------------------- Frontend ALB --- #
 
 module "alb-frontend" {
   source  = "terraform-aws-modules/alb/aws"
@@ -56,7 +56,7 @@ module "alb-frontend" {
 }
 
 
-# ------------------------------------------------------------Frontend ALB --- #
+# ------------------------------------------------------------ Backend ALB --- #
 
 module "alb-backend" {
   source  = "terraform-aws-modules/alb/aws"
@@ -106,6 +106,51 @@ module "alb-backend" {
     {
       port               = 80
       protocol           = "HTTP"
+      target_group_index = 0
+    }
+  ]
+}
+
+
+# ----------------------------------------------------------- Database NLB --- #
+
+module "alb-database" {
+  source  = "terraform-aws-modules/alb/aws"
+  version = "~> 8.0"
+
+  name = "alb-database"
+
+  load_balancer_type = "network"
+
+  vpc_id  = module.vpc.vpc_id
+  subnets = module.vpc.public_subnets
+
+  target_groups = [
+    {
+      backend_protocol = "TCP"
+      backend_port     = 3306
+      target_type      = "instance"
+      targets = {
+        db-1 = {
+          target_id = aws_instance.database[0].id
+          port      = 3306
+        }
+        db-2 = {
+          target_id = aws_instance.database[1].id
+          port      = 3306
+        }
+        db-3 = {
+          target_id = aws_instance.database[2].id
+          port      = 3306
+        }
+      }
+    }
+  ]
+
+  http_tcp_listeners = [
+    {
+      port               = 80
+      protocol           = "TCP"
       target_group_index = 0
     }
   ]
