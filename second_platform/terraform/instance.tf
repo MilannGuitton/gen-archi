@@ -7,7 +7,7 @@ locals {
   instance_type      = "t2.micro"
   front_ips          = ["10.0.0.10", "10.0.32.10", "10.0.64.10"]
   back_ips           = ["10.0.0.20", "10.0.32.20", "10.0.64.20"]
-  db_ip              = "10.0.0.30"
+  db_ips             = ["10.0.16.30", "10.0.48.30", "10.0.80.30"]
   monitor_ip         = "10.0.0.40"
   frontend_user_data = file("./frontend-cloud-init.yml")
   bastion_user_data  = file("./bastion-cloud-init.yml")
@@ -88,43 +88,27 @@ resource "aws_instance" "backend" {
 
 # --------------------------------------------------------------- Database --- #
 
-resource "aws_instance" "db" {
+resource "aws_instance" "database" {
+  count         = 3
   ami           = local.image_id
   instance_type = local.instance_type
   key_name      = aws_key_pair.kp_sigl_admin.key_name
   user_data     = local.db_user_data
 
-  subnet_id  = module.vpc.public_subnets[0]
-  private_ip = local.db_ip
+  subnet_id  = module.vpc.private_subnets[count.index]
+  private_ip = local.db_ips[count.index]
 
   vpc_security_group_ids = [
     aws_security_group.allow_all.id
   ]
 
-  tags = {
-    Name      = "DB",
-    Terraform = "true"
+  root_block_device {
+    volume_size = 10
+    delete_on_termination = true
   }
-}
-
-
-# ---------------------------------------------------------------- Monitor --- #
-
-resource "aws_instance" "monitor" {
-  ami           = local.image_id
-  instance_type = local.instance_type
-  key_name      = aws_key_pair.kp_sigl_admin.key_name
-  user_data     = local.monitor_user_data
-
-  subnet_id  = module.vpc.public_subnets[0]
-  private_ip = local.monitor_ip
-
-  vpc_security_group_ids = [
-    aws_security_group.allow_all.id
-  ]
 
   tags = {
-    Name      = "Monitor",
+    Name      = "Database-${count.index + 1}",
     Terraform = "true"
   }
 }
