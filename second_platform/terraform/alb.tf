@@ -20,6 +20,16 @@ module "alb-frontend" {
       backend_protocol = "HTTP"
       backend_port     = 80
       target_type      = "instance"
+      health_check = {
+        enabled             = true
+        interval            = 30
+        path                = "/"
+        port                = "traffic-port"
+        healthy_threshold   = 2
+        unhealthy_threshold = 2
+        timeout             = 5
+        protocol            = "HTTP"
+      }
       targets = {
         front-1 = {
           target_id = aws_instance.frontend[0].id
@@ -76,6 +86,16 @@ module "alb-backend" {
       backend_protocol = "HTTP"
       backend_port     = 8000
       target_type      = "instance"
+      health_check = {
+        enabled             = true
+        interval            = 30
+        path                = "/health"
+        port                = "traffic-port"
+        healthy_threshold   = 2
+        unhealthy_threshold = 2
+        timeout             = 3
+        protocol            = "HTTP"
+      }
       targets = {
         back-1 = {
           target_id = aws_instance.backend[0].id
@@ -130,6 +150,16 @@ module "alb-database" {
       backend_protocol = "TCP"
       backend_port     = 3306
       target_type      = "instance"
+      health_check = {
+        enabled             = true
+        interval            = 5
+        path                = "/health"
+        port                = "traffic-port"
+        healthy_threshold   = 2
+        unhealthy_threshold = 2
+        timeout             = 3
+        protocol            = "ICMP"
+      }
       targets = {
         db-1 = {
           target_id = aws_instance.database[0].id
