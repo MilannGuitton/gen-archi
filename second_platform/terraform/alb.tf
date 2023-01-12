@@ -150,16 +150,6 @@ module "alb-database" {
       backend_protocol = "TCP"
       backend_port     = 3306
       target_type      = "instance"
-      health_check = {
-        enabled             = true
-        interval            = 5
-        path                = "/health"
-        port                = "traffic-port"
-        healthy_threshold   = 2
-        unhealthy_threshold = 2
-        timeout             = 3
-        protocol            = "ICMP"
-      }
       targets = {
         db-1 = {
           target_id = aws_instance.database[0].id
