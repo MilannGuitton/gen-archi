@@ -40,7 +40,7 @@ except mariadb.Error as e:
 def read_root():
     res = []
     try:
-        cur.execute("SELECT name, score FROM scores")
+        cur.execute("SELECT name, score FROM scores ORDER BY score DESC LIMIT 5")
         for (name, score) in cur:
             res.append({"name": name, "score": score})
     except mariadb.Error as e:

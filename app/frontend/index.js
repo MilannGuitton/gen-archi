@@ -39,8 +39,6 @@ let fps = 60
 let fpsInterval = 1000 / fps
 let msPrev = window.performance.now()
 
-getData('https://p2-backend.aws.tryhard.fr')
-
 
 function init() {
   player = new Player()
@@ -72,6 +70,11 @@ function init() {
   score = 0
   document.querySelector('#finalScore').innerHTML = score
   document.querySelector('#scoreEl').innerHTML = score
+  document.querySelector('#highScore1').innerHTML = '1.'
+  document.querySelector('#highScore2').innerHTML = '2.'
+  document.querySelector('#highScore3').innerHTML = '3.'
+  document.querySelector('#highScore4').innerHTML = '4.'
+  document.querySelector('#highScore5').innerHTML = '5.'
 
   for (let i = 0; i < 100; i++) {
     particles.push(
@@ -109,6 +112,14 @@ function endGame() {
 
     document.querySelector('#restartScreen').style.display = 'flex'
     document.querySelector('#finalScore').innerHTML = score
+
+    let highScore = getData('https://p2-backend.aws.tryhard.fr')
+
+    highScore.then(data => {
+      for (let i = 0; i < data.length; i++) {
+        document.querySelector('#highScore' + (i + 1)).innerHTML = i + 1 + '. ' + data[i].name + ' : ' + data[i].score
+      }
+    });
   }, 2000)
 
   createParticles({
