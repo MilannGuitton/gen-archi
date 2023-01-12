@@ -18,11 +18,12 @@ app.add_middleware(
 
 try:
     conn = mariadb.connect(
-        user="user",
-        password="mypassword",
-        host="127.0.0.1",
-        port=3306,
-        database="mariondb"
+        user="tryhard",
+        password="1234",
+        host="p2-database.aws.tryhard.fr",
+        port=80,
+        database="mariondb",
+        autocommit=True
     )
 except mariadb.Error as e:
     print(f"Error connecting to MariaDB Platform: {e}")
