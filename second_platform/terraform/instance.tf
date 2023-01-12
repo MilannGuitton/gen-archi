@@ -11,10 +11,8 @@ locals {
   monitor_ip         = "10.0.0.40"
   frontend_user_data = file("./frontend-cloud-init.yml")
   bastion_user_data  = file("./bastion-cloud-init.yml")
-
   db_user_data      = file("./db-cloud-init.yml")
   backend_user_data = file("./backend-cloud-init.yml")
-  monitor_user_data = file("./monitor-cloud-init.yml")
 
 }
 
