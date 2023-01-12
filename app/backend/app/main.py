@@ -3,6 +3,7 @@ from starlette.middleware.cors import CORSMiddleware
 from fastapi import Request
 import mariadb
 import sys
+import json
 
 app = FastAPI()
 origins = ["*"]
@@ -17,10 +18,10 @@ app.add_middleware(
 
 try:
     conn = mariadb.connect(
-        user="tryhard",
-        password="1234",
-        host="p2-database.aws.tryhard.fr",
-        port=80,
+        user="user",
+        password="mypassword",
+        host="127.0.0.1",
+        port=3306,
         database="mariondb"
     )
 except mariadb.Error as e:
@@ -36,13 +37,14 @@ except mariadb.Error as e:
 
 @app.get("/")
 def read_root():
+    res = []
     try:
-        cur.execute("SELECT * FROM scores")
-        for (id, name, score) in cur:
-            print(f"ID: {id}, Name: {name}, Score: {score}")
+        cur.execute("SELECT name, score FROM scores")
+        for (name, score) in cur:
+            res.append({"name": name, "score": score})
     except mariadb.Error as e:
         print(f"Error: {e}")
-    return 0
+    return res
 
 @app.post('/')
 async def main(request: Request):
@@ -53,7 +55,3 @@ async def main(request: Request):
     except mariadb.Error as e: 
         print(f"Error: {e}")
     return await request.json()
-
-@app.get('/health')
-def health():
-    return {"status": "ok"}
