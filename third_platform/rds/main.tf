@@ -1,15 +1,6 @@
 locals {
   name   = "mariondb"
-  region = "eu-west-1"
-
-  vpc_cidr = "10.0.0.0/16"
-  azs      = ["eu-west-3a", "eu-west-3b", "eu-west-3c"]
-
-  tags = {
-    Name       = local.name
-    Example    = local.name
-    Repository = "https://github.com/terraform-aws-modules/terraform-aws-rds"
-  }
+  region = "eu-west-3"
 }
 
 ################################################################################
@@ -29,12 +20,14 @@ module "db" {
   engine_version       = "8.0"
   family               = "mysql8.0" # DB parameter group
   major_engine_version = "8.0"      # DB option group
-  instance_class       = "db.t4g.large"
+  instance_class       = "db.t3.micro"
 
   allocated_storage = 20
 
   db_name  = local.name
-  username = "complete_mysql"
+  username = local.username
+  create_random_password = false
+  password = local.password
   port     = 3306
 
   db_subnet_group_name   = module.vpc.database_subnet_group
@@ -54,23 +47,6 @@ module "db" {
 ################################################################################
 # Supporting Resources
 ################################################################################
-
-module "vpc" {
-  source  = "terraform-aws-modules/vpc/aws"
-  version = "~> 3.0"
-
-  name = local.name
-  cidr = local.vpc_cidr
-
-  azs              = local.azs
-  public_subnets   = [for k, v in local.azs : cidrsubnet(local.vpc_cidr, 8, k)]
-  private_subnets  = [for k, v in local.azs : cidrsubnet(local.vpc_cidr, 8, k + 3)]
-  database_subnets = [for k, v in local.azs : cidrsubnet(local.vpc_cidr, 8, k + 6)]
-
-  create_database_subnet_group = true
-
-  tags = local.tags
-}
 
 module "security_group" {
   source  = "terraform-aws-modules/security-group/aws"
@@ -98,7 +74,7 @@ module "security_group" {
     to_port          = 0
     protocol         = "-1"
     description      = "Allow all outbound traffic"
-    cidr_blocks      = ["0.0.0.0/0"]
+    cidr_blocks      = "0.0.0.0/0"
     }
   ]
 
