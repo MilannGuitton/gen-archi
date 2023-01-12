@@ -19,8 +19,8 @@ try:
     conn = mariadb.connect(
         user="tryhard",
         password="1234",
-        host="10.0.0.30",
-        port=3306,
+        host="p2-database.aws.tryhard.fr",
+        port=80,
         database="mariondb"
     )
 except mariadb.Error as e:

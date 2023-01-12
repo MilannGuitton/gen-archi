@@ -39,7 +39,7 @@ let fps = 60
 let fpsInterval = 1000 / fps
 let msPrev = window.performance.now()
 
-getData('http://10.0.0.20:8000')
+getData('https://p2-backend.aws.tryhard.fr')
 
 
 function init() {
@@ -92,7 +92,7 @@ function init() {
 }
 
 function endGame() {
-  console.log(health('http://10.0.0.20:8000/health'))
+  console.log(health('https://p2-backend.aws.tryhard.fr/health'))
   console.log('you lose')
   audio.gameOver.play()
 
@@ -106,7 +106,7 @@ function endGame() {
   setTimeout(() => {
     game.active = false
     console.log(nameStart.value)
-    postData('http://10.0.0.20:8000', { name: nameStart.value, score: score })
+    postData('https://p2-backend.aws.tryhard.fr', { name: nameStart.value, score: score })
 
     document.querySelector('#restartScreen').style.display = 'flex'
     document.querySelector('#finalScore').innerHTML = score
