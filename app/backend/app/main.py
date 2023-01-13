@@ -29,9 +29,8 @@ except mariadb.Error as e:
     print(f"Error connecting to MariaDB Platform: {e}")
     sys.exit(1)
 
-cur = conn.cursor()
-
 try:
+    cur = conn.cursor()
     cur.execute("CREATE TABLE IF NOT EXISTS scores (id SERIAL PRIMARY KEY, name VARCHAR(100), score INT)")
 except mariadb.Error as e: 
     print(f"Error: {e}")
@@ -40,6 +39,7 @@ except mariadb.Error as e:
 def read_root():
     res = []
     try:
+        cur = conn.cursor()
         cur.execute("SELECT name, score FROM scores ORDER BY score DESC LIMIT 5")
         for (name, score) in cur:
             res.append({"name": name, "score": score})
@@ -51,6 +51,7 @@ def read_root():
 async def main(request: Request):
     res = await request.json()
     try:
+        cur = conn.cursor()
         print("DEBUG: ", res["name"], res["score"])
         cur.execute("INSERT INTO scores (name, score) VALUES (?, ?)", (res["name"], res["score"]))
     except mariadb.Error as e: 
