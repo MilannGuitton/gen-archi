@@ -1,3 +1,5 @@
+# ----------------------------------------------------------------- Locals --- #
+
 locals {
   username = "admin"
   password = "tryhardpassword"
@@ -8,6 +10,9 @@ locals {
     Environment = "Spacelift_Test"
   }
 }
+
+
+# -------------------------------------------------------------------- Get --- #
 
 data "archive_file" "zip_get" {
   type        = "zip"
@@ -32,6 +37,9 @@ resource "aws_lambda_function" "terraform_lambda_get" {
   }
 }
 
+
+# ------------------------------------------------------------------- Post --- #
+
 data "archive_file" "zip_post" {
   type        = "zip"
   source_dir  = "${path.module}/python/post"
@@ -55,15 +63,18 @@ resource "aws_lambda_function" "terraform_lambda_post" {
   }
 }
 
-data "archive_file" "zip_test" {
+
+# ------------------------------------------------------------------- Test --- #
+
+data "archive_file" "zip_health" {
   type        = "zip"
-  source_dir  = "${path.module}/python/test"
-  output_path = "${path.module}/python/test.zip"
+  source_dir  = "${path.module}/python/health"
+  output_path = "${path.module}/python/health.zip"
 }
 
-resource "aws_lambda_function" "terraform_lambda_test" {
-  filename      = "${path.module}/python/test.zip"
-  function_name = "lambda_function_test"
+resource "aws_lambda_function" "terraform_lambda_health" {
+  filename      = "${path.module}/python/health.zip"
+  function_name = "lambda_function_health"
   role          = aws_iam_role.lambda_spacelift.arn
   handler       = "index.lambda_handler"
   runtime       = "python3.8"

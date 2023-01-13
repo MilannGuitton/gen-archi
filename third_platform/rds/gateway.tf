@@ -1,3 +1,5 @@
+# ------------------------------------------------------------ API Gateway --- #
+
 resource "aws_apigatewayv2_api" "genarchi" {
   name          = "genarchi"
   description   = "API for genarchi p3"
@@ -11,38 +13,68 @@ resource "aws_apigatewayv2_stage" "default" {
   auto_deploy = true
 }
 
-resource "aws_apigatewayv2_integration" "lambda_test" {
-  api_id = aws_apigatewayv2_api.genarchi.id
-
-  integration_uri    = aws_lambda_function.terraform_lambda_test.invoke_arn
-  integration_type   = "AWS_PROXY"
-  integration_method = "POST"
-}
-
-resource "aws_apigatewayv2_route" "get_root" {
-  api_id = aws_apigatewayv2_api.genarchi.id
-
-  route_key = "GET /"
-  target    = "integrations/${aws_apigatewayv2_integration.lambda_test.id}"
-}
-
-resource "aws_apigatewayv2_route" "get_test" {
-  api_id = aws_apigatewayv2_api.genarchi.id
-
-  route_key = "GET /test"
-  target    = "integrations/${aws_apigatewayv2_integration.lambda_test.id}"
-}
-
 resource "aws_lambda_permission" "api_gw" {
   statement_id  = "AllowExecutionFromAPIGateway"
   action        = "lambda:InvokeFunction"
-  function_name = aws_lambda_function.terraform_lambda_test.function_name
+  function_name = aws_lambda_function.terraform_lambda_health.function_name
   principal     = "apigateway.amazonaws.com"
 
   source_arn = "${aws_apigatewayv2_api.genarchi.execution_arn}/*/*"
 }
 
-# ---
+
+# ------------------------------------------------------------ Integration --- #
+
+resource "aws_apigatewayv2_integration" "lambda_get" {
+  api_id = aws_apigatewayv2_api.genarchi.id
+
+  integration_uri    = aws_lambda_function.terraform_lambda_get.invoke_arn
+  integration_type   = "AWS_PROXY"
+  integration_method = "POST"
+}
+
+resource "aws_apigatewayv2_integration" "lambda_post" {
+  api_id = aws_apigatewayv2_api.genarchi.id
+
+  integration_uri    = aws_lambda_function.terraform_lambda_post.invoke_arn
+  integration_type   = "AWS_PROXY"
+  integration_method = "POST"
+}
+
+resource "aws_apigatewayv2_integration" "lambda_health" {
+  api_id = aws_apigatewayv2_api.genarchi.id
+
+  integration_uri    = aws_lambda_function.terraform_lambda_health.invoke_arn
+  integration_type   = "AWS_PROXY"
+  integration_method = "POST"
+}
+
+
+# ----------------------------------------------------------------- Routes --- #
+
+resource "aws_apigatewayv2_route" "get_root" {
+  api_id = aws_apigatewayv2_api.genarchi.id
+
+  route_key = "GET /"
+  target    = "integrations/${aws_apigatewayv2_integration.lambda_get.id}"
+}
+
+resource "aws_apigatewayv2_route" "post_root" {
+  api_id = aws_apigatewayv2_api.genarchi.id
+
+  route_key = "POST /"
+  target    = "integrations/${aws_apigatewayv2_integration.lambda_post.id}"
+}
+
+resource "aws_apigatewayv2_route" "get_health" {
+  api_id = aws_apigatewayv2_api.genarchi.id
+
+  route_key = "GET /health"
+  target    = "integrations/${aws_apigatewayv2_integration.lambda_health.id}"
+}
+
+
+# ------------------------------------------------------------ Domain name --- #
 
 resource "aws_apigatewayv2_domain_name" "genarchi" {
   domain_name = "backend.p3.${var.subdomain_name}${var.domain_name}"

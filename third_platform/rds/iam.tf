@@ -1,3 +1,5 @@
+# -------------------------------------------------------------- DB Access --- #
+
 resource "aws_iam_role" "lambda_spacelift" {
   name               = "lambda_function_spacelift"
   assume_role_policy = <<EOF
