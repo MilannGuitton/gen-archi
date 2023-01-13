@@ -1,5 +1,5 @@
-resource "aws_iam_role" "lambda_role" {
-  name               = "Spacelift_Test_Lambda_Function_Role"
+resource "aws_iam_role" "lambda_spacelift" {
+  name               = "lambda_function_spacelift"
   assume_role_policy = <<EOF
 {
  "Version": "2012-10-17",
@@ -17,29 +17,11 @@ resource "aws_iam_role" "lambda_role" {
 EOF
 }
 
-resource "aws_iam_policy" "iam_policy_for_lambda" {
-  name        = "aws_iam_policy_for_terraform_aws_lambda_role"
-  path        = "/"
-  description = "AWS IAM Policy for managing aws lambda role"
-  policy      = <<EOF
-{
- "Version": "2012-10-17",
- "Statement": [
-   {
-     "Action": [
-       "logs:CreateLogGroup",
-       "logs:CreateLogStream",
-       "logs:PutLogEvents"
-     ],
-     "Resource": "arn:aws:logs:*:*:*",
-     "Effect": "Allow"
-   }
- ]
-}
-EOF
+data "aws_iam_policy" "rds_full_access" {
+  name = "AmazonRDSFullAccess"
 }
 
-resource "aws_iam_role_policy_attachment" "attach_iam_policy_to_iam_role" {
-  role       = aws_iam_role.lambda_role.name
-  policy_arn = aws_iam_policy.iam_policy_for_lambda.arn
+resource "aws_iam_role_policy_attachment" "lambda_rds_access" {
+  role       = aws_iam_role.lambda_spacelift.name
+  policy_arn = data.aws_iam_policy.rds_full_access.arn
 }

@@ -18,10 +18,10 @@ data "archive_file" "zip_get" {
 resource "aws_lambda_function" "terraform_lambda_get" {
   filename      = "${path.module}/python/get.zip"
   function_name = "lambda_function_get"
-  role          = aws_iam_role.lambda_role.arn
+  role          = aws_iam_role.lambda_spacelift.arn
   handler       = "index.lambda_handler"
   runtime       = "python3.8"
-  depends_on    = [aws_iam_role_policy_attachment.attach_iam_policy_to_iam_role]
+  depends_on    = [aws_iam_role_policy_attachment.lambda_rds_access]
 
   environment {
     variables = {
@@ -41,10 +41,10 @@ data "archive_file" "zip_post" {
 resource "aws_lambda_function" "terraform_lambda_post" {
   filename      = "${path.module}/python/post.zip"
   function_name = "lambda_function_post"
-  role          = aws_iam_role.lambda_role.arn
+  role          = aws_iam_role.lambda_spacelift.arn
   handler       = "index.lambda_handler"
   runtime       = "python3.8"
-  depends_on    = [aws_iam_role_policy_attachment.attach_iam_policy_to_iam_role]
+  depends_on    = [aws_iam_role_policy_attachment.lambda_rds_access]
 
   environment {
     variables = {
