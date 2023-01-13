@@ -13,3 +13,9 @@ output "db_instance_name" {
   description = "The database name"
   value       = module.db.db_instance_name
 }
+
+output "base_url" {
+  description = "Base URL for API Gateway stage."
+
+  value = aws_apigatewayv2_stage.default.invoke_url
+}

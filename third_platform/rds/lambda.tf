@@ -54,3 +54,26 @@ resource "aws_lambda_function" "terraform_lambda_post" {
     }
   }
 }
+
+data "archive_file" "zip_test" {
+  type        = "zip"
+  source_dir  = "${path.module}/python/test"
+  output_path = "${path.module}/python/test.zip"
+}
+
+resource "aws_lambda_function" "terraform_lambda_test" {
+  filename      = "${path.module}/python/test.zip"
+  function_name = "lambda_function_test"
+  role          = aws_iam_role.lambda_spacelift.arn
+  handler       = "index.lambda_handler"
+  runtime       = "python3.8"
+  depends_on    = [aws_iam_role_policy_attachment.lambda_rds_access]
+
+  environment {
+    variables = {
+      NAME     = local.name
+      PASSWORD = local.password
+      ENDPOINT = local.endpoint
+    }
+  }
+}
