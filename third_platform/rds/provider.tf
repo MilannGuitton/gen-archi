@@ -7,6 +7,13 @@ terraform {
       version = ">= 4.45"
     }
   }
+
+  backend "s3" {
+    bucket  = "tryhard-tf-infra"
+    key     = "genarchi/rds/common.tfstate"
+    region  = "eu-west-3"
+    encrypt = true
+  }
 }
 
 provider "aws" {
