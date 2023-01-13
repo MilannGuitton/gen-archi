@@ -19,3 +19,4 @@ ansible/playbooks/ansible_artifacts/
 *.pem
 
 app/backend/mariadb
+*.zip
