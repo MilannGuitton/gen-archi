@@ -8,11 +8,10 @@ locals {
   front_ips          = ["10.0.0.10", "10.0.32.10", "10.0.64.10"]
   back_ips           = ["10.0.0.20", "10.0.32.20", "10.0.64.20"]
   db_ips             = ["10.0.16.30", "10.0.48.30", "10.0.80.30"]
-  monitor_ip         = "10.0.0.40"
   frontend_user_data = file("./user_data/frontend.yml")
   bastion_user_data  = file("./user_data/bastion.yml")
-  db_user_data      = file("./user_data/database.yml")
-  backend_user_data = file("./user_data/backend.yml")
+  db_user_data       = file("./user_data/database.yml")
+  backend_user_data  = file("./user_data/backend.yml")
 
 }
 
@@ -101,7 +100,7 @@ resource "aws_instance" "database" {
   ]
 
   root_block_device {
-    volume_size = 10
+    volume_size           = 10
     delete_on_termination = true
   }
 
