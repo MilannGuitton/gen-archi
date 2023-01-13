@@ -27,8 +27,7 @@ BACK_SCRIPT="back/back.yml"
 AWS_PROFILE="TRYHARD"
 BASTION_IP="13.36.46.172"
 SSH_HOSTS_FILE="$HOME/.ssh/known_hosts"
-RETRIES=10
-
+FRONT_CONFIG_FILE="$PWD/../app/frontend/config.js"
 
 
 ################################################################################
@@ -54,6 +53,7 @@ run_ansible() {
     echo "$keyscan" >> "$SSH_HOSTS_FILE"
 
     ansible-playbook "$MARIADB_CLUSTER_SCRIPT"
+    echo 'export const ENDPOINT = "https://p2-backend.aws.tryhard.fr";' > "$FRONT_CONFIG_FILE"
     ansible-playbook "$FRONT_SCRIPT"
     ansible-playbook "$BACK_SCRIPT"
     cd ..

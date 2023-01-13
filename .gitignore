@@ -15,7 +15,9 @@ ansible/playbooks/ansible_artifacts/
 *.vscode
 *.idea
 
-# Keys
+# Secrets
 *.pem
+*.env
+config.js
 
 app/backend/mariadb
