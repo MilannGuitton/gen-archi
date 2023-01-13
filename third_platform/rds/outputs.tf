@@ -19,3 +19,7 @@ output "base_url" {
 
   value = aws_apigatewayv2_stage.default.invoke_url
 }
+
+output "custom_domain_api" {
+  value = "https://${aws_apigatewayv2_api_mapping.genarchi.domain_name}"
+}

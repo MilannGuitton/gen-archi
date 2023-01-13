@@ -61,7 +61,3 @@ resource "aws_apigatewayv2_api_mapping" "genarchi" {
   domain_name = aws_apigatewayv2_domain_name.genarchi.id
   stage       = aws_apigatewayv2_stage.default.id
 }
-
-output "custom_domain_api" {
-  value = "https://${aws_apigatewayv2_api_mapping.genarchi.domain_name}"
-}
