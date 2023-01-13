@@ -10,7 +10,7 @@ locals {
 module "db" {
   source = "terraform-aws-modules/rds/aws"
 
-  identifier = "${local.name}"
+  identifier = local.name
 
   create_db_option_group    = false
   create_db_parameter_group = false
@@ -24,13 +24,13 @@ module "db" {
 
   allocated_storage = 20
 
-  db_name  = local.name
-  username = local.username
+  db_name                = local.name
+  username               = local.username
   create_random_password = false
-  password = local.password
-  port     = 3306
+  password               = local.password
+  port                   = 3306
 
-  db_subnet_group_name   = module.vpc.database_subnet_group
+  db_subnet_group_name = module.vpc.database_subnet_group
 
   vpc_security_group_ids = [module.security_group.security_group_id]
 
@@ -67,14 +67,14 @@ module "security_group" {
     },
   ]
 
-    # egress
+  # egress
   egress_with_cidr_blocks = [
     {
-    from_port        = 0
-    to_port          = 0
-    protocol         = "-1"
-    description      = "Allow all outbound traffic"
-    cidr_blocks      = "0.0.0.0/0"
+      from_port   = 0
+      to_port     = 0
+      protocol    = "-1"
+      description = "Allow all outbound traffic"
+      cidr_blocks = "0.0.0.0/0"
     }
   ]
 
