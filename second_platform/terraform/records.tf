@@ -29,7 +29,7 @@ resource "aws_route53_record" "frontend" {
 }
 
 
-# --------------------------------------------------- p2-db.aws.tryhard.fr --- #
+# --------------------------------------------- p2-database.aws.tryhard.fr --- #
 
 resource "aws_route53_record" "database" {
   allow_overwrite = true
@@ -39,6 +39,6 @@ resource "aws_route53_record" "database" {
   zone_id         = data.aws_route53_zone.aws_tryhard_fr.zone_id
 
   records = [
-    module.alb-database.lb_dns_name,
+    module.nlb-database.lb_dns_name,
   ]
 }

@@ -1,4 +1,4 @@
-# ------------------------------------------------------------ ALB section --- #
+# -------------------------------------------------- Loadbalancers section --- #
 
 # ----------------------------------------------------------- Frontend ALB --- #
 
@@ -134,11 +134,11 @@ module "alb-backend" {
 
 # ----------------------------------------------------------- Database NLB --- #
 
-module "alb-database" {
+module "nlb-database" {
   source  = "terraform-aws-modules/alb/aws"
   version = "~> 8.0"
 
-  name = "alb-database"
+  name = "nlb-database"
 
   load_balancer_type = "network"
 
