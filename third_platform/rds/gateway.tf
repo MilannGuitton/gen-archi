@@ -16,7 +16,7 @@ resource "aws_apigatewayv2_stage" "default" {
 resource "aws_lambda_permission" "api_gw" {
   statement_id  = "AllowExecutionFromAPIGateway"
   action        = "lambda:InvokeFunction"
-  function_name = aws_lambda_function.terraform_lambda_health.function_name
+  function_name = aws_lambda_function.health.function_name
   principal     = "apigateway.amazonaws.com"
 
   source_arn = "${aws_apigatewayv2_api.genarchi.execution_arn}/*/*"
@@ -28,7 +28,7 @@ resource "aws_lambda_permission" "api_gw" {
 resource "aws_apigatewayv2_integration" "lambda_get" {
   api_id = aws_apigatewayv2_api.genarchi.id
 
-  integration_uri    = aws_lambda_function.terraform_lambda_get.invoke_arn
+  integration_uri    = aws_lambda_function.get.invoke_arn
   integration_type   = "AWS_PROXY"
   integration_method = "POST"
 }
@@ -36,7 +36,7 @@ resource "aws_apigatewayv2_integration" "lambda_get" {
 resource "aws_apigatewayv2_integration" "lambda_post" {
   api_id = aws_apigatewayv2_api.genarchi.id
 
-  integration_uri    = aws_lambda_function.terraform_lambda_post.invoke_arn
+  integration_uri    = aws_lambda_function.post.invoke_arn
   integration_type   = "AWS_PROXY"
   integration_method = "POST"
 }
@@ -44,7 +44,7 @@ resource "aws_apigatewayv2_integration" "lambda_post" {
 resource "aws_apigatewayv2_integration" "lambda_health" {
   api_id = aws_apigatewayv2_api.genarchi.id
 
-  integration_uri    = aws_lambda_function.terraform_lambda_health.invoke_arn
+  integration_uri    = aws_lambda_function.health.invoke_arn
   integration_type   = "AWS_PROXY"
   integration_method = "POST"
 }
