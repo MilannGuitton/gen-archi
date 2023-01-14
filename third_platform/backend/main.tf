@@ -1,8 +1,3 @@
-locals {
-  name   = "mariondb"
-  region = "eu-west-3"
-}
-
 ################################################################################
 # RDS Module
 ################################################################################
@@ -10,7 +5,7 @@ locals {
 module "db" {
   source = "terraform-aws-modules/rds/aws"
 
-  identifier = local.name
+  identifier = var.db_name
 
   create_db_option_group    = false
   create_db_parameter_group = false
@@ -24,10 +19,10 @@ module "db" {
 
   allocated_storage = 20
 
-  db_name                = local.name
-  username               = local.username
+  db_name                = var.db_name
+  username               = var.db_username
   create_random_password = false
-  password               = local.password
+  password               = var.db_password
   port                   = 3306
 
   db_subnet_group_name = module.vpc.database_subnet_group
@@ -39,8 +34,6 @@ module "db" {
   backup_window      = null
 
   backup_retention_period = 0
-
-  tags = local.tags
 }
 
 
@@ -52,8 +45,8 @@ module "security_group" {
   source  = "terraform-aws-modules/security-group/aws"
   version = "~> 4.0"
 
-  name        = local.name
-  description = "Complete MySQL example security group"
+  name        = var.db_name
+  description = "MySQL security group"
   vpc_id      = module.vpc.vpc_id
 
   # ingress
@@ -77,6 +70,4 @@ module "security_group" {
       cidr_blocks = "0.0.0.0/0"
     }
   ]
-
-  tags = local.tags
 }

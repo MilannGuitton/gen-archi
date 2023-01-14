@@ -1,10 +1,11 @@
-# --- Variables Section --- #
-
-# -------------------------------------------------------------- Variables --- #
+# ------------------------------------------------------------------- Main --- #
 
 variable "aws_region" {
   type = string
 }
+
+
+# -------------------------------------------------------------------- DNS --- #
 
 variable "domain_name" {
   type = string
@@ -12,4 +13,38 @@ variable "domain_name" {
 
 variable "subdomain_name" {
   type = string
+}
+
+
+# ------------------------------------------------------------------- VPC --- #
+
+variable "vpc_cidr" {
+  type    = string
+  default = "10.0.0.0/16"
+}
+
+variable "subnet_cidr" {
+  type    = string
+  default = "10.0.0.0/24"
+}
+
+variable "vpc_azs" {
+  type    = list(string)
+  default = ["eu-west-3a", "eu-west-3b", "eu-west-3c"]
+}
+
+
+# --------------------------------------------------------------------- DB --- #
+
+variable "db_name" {
+  type = string
+}
+
+variable "db_username" {
+  type = string
+}
+
+variable "db_password" {
+  type    = string
+  default = "tryhardpassword"
 }

@@ -1,17 +1,3 @@
-# ----------------------------------------------------------------- Locals --- #
-
-locals {
-  username = "admin"
-  password = "tryhardpassword"
-  endpoint = module.db.db_instance_endpoint
-
-  tags = {
-    Name        = "Spacelift"
-    Environment = "Spacelift"
-  }
-}
-
-
 # ------------------------------------------------------------------ Shell --- #
 
 resource "null_resource" "build_lambda_layers" {
@@ -54,12 +40,6 @@ resource "aws_lambda_function" "health" {
   depends_on    = [aws_iam_role_policy_attachment.lambda_rds_access]
 
   source_code_hash = filebase64sha256("${path.module}/lambda/src/health.zip")
-
-  environment {
-    variables = {
-      NAME = local.name
-    }
-  }
 }
 
 
@@ -85,9 +65,9 @@ resource "aws_lambda_function" "get" {
 
   environment {
     variables = {
-      NAME     = local.name
-      PASSWORD = local.password
-      ENDPOINT = local.endpoint
+      NAME     = var.db_name
+      PASSWORD = var.db_password
+      ENDPOINT = module.db.db_instance_endpoint
     }
   }
 }
@@ -115,9 +95,9 @@ resource "aws_lambda_function" "post" {
 
   environment {
     variables = {
-      NAME     = local.name
-      PASSWORD = local.password
-      ENDPOINT = local.endpoint
+      NAME     = var.db_name
+      PASSWORD = var.db_password
+      ENDPOINT = module.db.db_instance_endpoint
     }
   }
 }
