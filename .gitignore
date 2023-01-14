@@ -18,4 +18,9 @@ ansible/playbooks/ansible_artifacts/
 # Keys
 *.pem
 
+# App
 app/backend/mariadb
+*.zip
+
+# Mac
+.DS_Store
