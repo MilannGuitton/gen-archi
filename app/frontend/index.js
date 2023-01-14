@@ -108,12 +108,12 @@ function endGame() {
   setTimeout(() => {
     game.active = false
     console.log(nameStart.value)
-    postData('https://p2-backend.aws.tryhard.fr', { name: nameStart.value, score: score })
+    postData(ENDPOINT, { name: nameStart.value, score: score })
 
     document.querySelector('#restartScreen').style.display = 'flex'
     document.querySelector('#finalScore').innerHTML = score
 
-    let highScore = getData('https://p2-backend.aws.tryhard.fr')
+    let highScore = getData(ENDPOINT)
 
     highScore.then(data => {
       for (let i = 0; i < data.length; i++) {
