@@ -16,7 +16,7 @@ locals {
 
 resource "null_resource" "build_lambda_layers" {
 
- provisioner "local-exec" {
+  provisioner "local-exec" {
 
     command = "cd ${path.module}/lambda && ./build.sh"
   }
@@ -25,8 +25,8 @@ resource "null_resource" "build_lambda_layers" {
 # ----------------------------------------------------------------- Layers --- #
 
 resource "aws_lambda_layer_version" "pymysql" {
-  filename      = "${path.module}/lambda/packages/python3-pymysql.zip"
-  layer_name = "python3-pymysql"
+  filename    = "${path.module}/lambda/packages/python3-pymysql.zip"
+  layer_name  = "python3-pymysql"
   description = "Layer for pymysql python package"
 
   compatible_architectures = ["x86_64"]
@@ -57,7 +57,7 @@ resource "aws_lambda_function" "health" {
 
   environment {
     variables = {
-      NAME     = local.name
+      NAME = local.name
     }
   }
 }
