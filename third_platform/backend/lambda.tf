@@ -67,7 +67,7 @@ resource "aws_lambda_function" "get" {
     variables = {
       NAME     = var.db_name
       PASSWORD = var.db_password
-      ENDPOINT = module.db.db_instance_endpoint
+      ENDPOINT = module.db_spacelift_mysql.db_instance_endpoint
     }
   }
 }
@@ -97,7 +97,7 @@ resource "aws_lambda_function" "post" {
     variables = {
       NAME     = var.db_name
       PASSWORD = var.db_password
-      ENDPOINT = module.db.db_instance_endpoint
+      ENDPOINT = module.db_spacelift_mysql.db_instance_endpoint
     }
   }
 }
