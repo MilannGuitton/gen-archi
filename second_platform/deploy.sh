@@ -28,6 +28,8 @@ AWS_PROFILE="TRYHARD"
 BASTION_IP="13.36.46.172"
 SSH_HOSTS_FILE="$HOME/.ssh/known_hosts"
 FRONT_CONFIG_FILE="$PWD/../app/frontend/config.js"
+P2_ENDPOINT="https://backend.p2.aws.tryhard.fr"
+P3_ENDPOINT="https://backend.p3.aws.tryhard.fr"
 
 
 ################################################################################
@@ -82,7 +84,6 @@ deploy_terraform() {
 
 run_ansible() {
     set_env
-    echo "https://p2.aws.tryhard.fr" > "$FRONT_CONFIG_FILE"
     cd "$ANSIBLE_FOLDER"
     keyscan=`ssh-keyscan -H $BASTION_IP`
     if [ -z "$keyscan" ]; then
@@ -91,11 +92,11 @@ run_ansible() {
     fi
     echo "$keyscan" >> "$SSH_HOSTS_FILE"
 
+    echo "const ENDPOINT=\"$P2_ENDPOINT\"" > "$FRONT_CONFIG_FILE"
     ansible-playbook "$MARIADB_CLUSTER_SCRIPT"
-    echo 'export const ENDPOINT = "https://p2-backend.aws.tryhard.fr";' > "$FRONT_CONFIG_FILE"
     ansible-playbook "$FRONT_SCRIPT"
     ansible-playbook "$BACK_SCRIPT"
-    echo "https://p3.aws.tryhard.fr" > "$FRONT_CONFIG_FILE"
+    echo "const ENDPOINT=\"$P3_ENDPOINT\"" > "$FRONT_CONFIG_FILE"
     cd ..
 }
 
