@@ -32,23 +32,37 @@ FRONT_CONFIG_FILE="$PWD/../app/frontend/config.js"
 
 # Set environment variables for mariadb
 
-ENV_FILE=".env"
-# If .env file already exists, use variables from it
-if [ -f "$ENV_FILE" ]; then
-    source "$ENV_FILE"
-else
-    # Else set defaults
-    export MARIADB_USER="tryhard"
-    export MARIADB_PASSWORD="1234"
-    export MARIADB_HOST="p2-database.aws.tryhard.fr"
-    export MARIADB_PORT="80"
-    export MARIADB_DATABASE="mariondb"
-    echo "MARIADB_USER=$MARIADB_USER" > "$ENV_FILE"
-    echo "MARIADB_PASSWORD=$MARIADB_PASSWORD" >> "$ENV_FILE"
-    echo "MARIADB_DATABASE=$MARIADB_DATABASE" >> "$ENV_FILE"
-    echo "MARIADB_HOST=p2-database.aws.tryhard.fr" >> "$ENV_FILE"
-    echo "MARIADB_PORT=80" >> "$ENV_FILE"
-fi
+set_env() {
+    ENV_FILE=".env"
+    # If .env file already exists, use variables from it
+    if [ -f "$ENV_FILE" ]; then
+        source "$ENV_FILE"
+    else
+        echo '#!/bin/sh' > "$ENV_FILE"
+    fi
+
+    # Check each variable or set it to default value
+    if [ -z "$MARIADB_USER" ]; then
+        export MARIADB_USER="tryhard"
+        echo "export MARIADB_USER=$MARIADB_USER" > "$ENV_FILE"
+    fi
+    if [ -z "$MARIADB_PASSWORD" ]; then
+        export MARIADB_PASSWORD="1234"
+        echo "export MARIADB_PASSWORD=$MARIADB_PASSWORD" >> "$ENV_FILE"
+    fi
+    if [ -z "$MARIADB_DATABASE" ]; then
+        export MARIADB_DATABASE="mariondb"
+        echo "export MARIADB_DATABASE=$MARIADB_DATABASE" >> "$ENV_FILE"
+    fi
+    if [ -z "$MARIADB_HOST" ]; then
+        export MARIADB_HOST="localhost"
+        echo "export MARIADB_HOST=$MARIADB_HOST" >> "$ENV_FILE"
+    fi
+    if [ -z "$MARIADB_PORT" ]; then
+        export MARIADB_PORT="80"
+        echo "export MARIADB_PORT=$MARIADB_PORT" >> "$ENV_FILE"
+    fi
+}
 
 ################################################################################
 ###                                 CREATE                                   ###
@@ -62,6 +76,7 @@ deploy_terraform() {
 }
 
 run_ansible() {
+    set_env
     cd "$ANSIBLE_FOLDER"
     keyscan=`ssh-keyscan -H $BASTION_IP`
     if [ -z "$keyscan" ]; then
