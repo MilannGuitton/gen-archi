@@ -1,4 +1,4 @@
-# ------------------------------------------------------------- Backend_p3 --- #
+# -------------------------------------------------------------------- ACM --- #
 
 resource "aws_acm_certificate" "cert_backend_p3" {
   domain_name = "backend.p3.${var.subdomain_name}${var.domain_name}"

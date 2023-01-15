@@ -134,17 +134,17 @@ resource "aws_lambda_function" "post" {
 }
 
 
-# ------------------------------------------------------------------- test --- #
+# ------------------------------------------------------------------- Ping --- #
 
-data "archive_file" "test" {
+data "archive_file" "tcp_ping" {
   type        = "zip"
-  source_dir  = "${path.module}/lambda/src/test"
-  output_path = "${path.module}/lambda/src/test.zip"
+  source_dir  = "${path.module}/lambda/src/tcp_ping"
+  output_path = "${path.module}/lambda/src/tcp_ping.zip"
 }
 
-resource "aws_lambda_function" "test" {
-  filename      = "${path.module}/lambda/src/test.zip"
-  function_name = "${var.project_name}-test"
+resource "aws_lambda_function" "tcp_ping" {
+  filename      = "${path.module}/lambda/src/tcp_ping.zip"
+  function_name = "${var.project_name}-tcp_ping"
   role          = aws_iam_role.lambda_spacelift.arn
   handler       = "index.lambda_handler"
   runtime       = "python3.8"
@@ -152,7 +152,7 @@ resource "aws_lambda_function" "test" {
 
   depends_on    = [aws_iam_role_policy_attachment.lambda_rds_access]
 
-  source_code_hash = "${data.archive_file.test.output_base64sha256}"
+  source_code_hash = "${data.archive_file.tcp_ping.output_base64sha256}"
 
   vpc_config {
     subnet_ids         = module.vpc.private_subnets
