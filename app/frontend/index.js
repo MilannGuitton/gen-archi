@@ -2,7 +2,6 @@ const scoreEl = document.querySelector('#scoreEl')
 const nameStart = document.querySelector('#nameStart')
 const canvas = document.querySelector('canvas')
 const c = canvas.getContext('2d')
-const ENDPOINT = "https://p2-backend.aws.tryhard.fr/"
 
 canvas.width = window.innerWidth
 canvas.height = window.innerHeight

@@ -18,7 +18,6 @@ ansible/playbooks/ansible_artifacts/
 # Secrets
 *.pem
 *.env
-config.js
 
 # App
 app/backend/mariadb
