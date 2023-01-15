@@ -24,7 +24,6 @@ ANSIBLE_FOLDER="ansible"
 MARIADB_CLUSTER_SCRIPT="mariadb/mariadb_setup.yml"
 FRONT_SCRIPT="front/front.yml"
 BACK_SCRIPT="back/back.yml"
-AWS_PROFILE="TRYHARD"
 BASTION_IP="13.36.46.172"
 SSH_HOSTS_FILE="$HOME/.ssh/known_hosts"
 FRONT_CONFIG_FILE="$PWD/../app/frontend/config.js"
@@ -115,7 +114,6 @@ destroy_infra() {
 ###                                  MAIN                                    ###
 ################################################################################
 
-export AWS_PROFILE="$AWS_PROFILE"
 
 if [ -z "$1" ]; then
     deploy_terraform
@@ -126,14 +124,6 @@ elif [ "$1" = "--ansible" ] || [ "$1" = "-a" ]; then
     run_ansible
 elif [ "$1" = "--destroy" ] || [ "$1" = "-d" ]; then
     destroy_infra
-elif [ "$1" = "--profile" ] || [ "$1" = "-p" ]; then
-    if [ -z "$2" ]; then
-        echo "No profile specified"
-        exit 1
-    fi
-    AWS_PROFILE="$2"
-    deploy_terraform
-    run_ansible
 else
     if [ "$1" = "--help" ] || [ "$1" = "-h" ]; then
         print_help
