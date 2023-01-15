@@ -62,4 +62,4 @@ def lambda_handler(event, context):
         logger.error(e)
         return response_with(400)
 
-    return response_with(200, "Insert done")
+    return response_with(200, "Insert done", "application/json")

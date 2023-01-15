@@ -4,6 +4,14 @@ resource "aws_apigatewayv2_api" "genarchi" {
   name          = "genarchi"
   description   = "API for genarchi p3"
   protocol_type = "HTTP"
+  cors_configuration {
+
+    allow_headers  = ["*"]
+    allow_methods  = ["*"]
+    allow_origins  = ["*"]
+    expose_headers = ["*"]
+    max_age        = 0
+  }
 }
 
 resource "aws_apigatewayv2_stage" "default" {
