@@ -4,7 +4,7 @@
 
 resource "aws_route53_record" "backend" {
   allow_overwrite = true
-  name            = "p2-backend.aws.tryhard.fr"
+  name            = "backend.p2.aws.tryhard.fr"
   ttl             = 300
   type            = "CNAME"
   zone_id         = data.aws_route53_zone.aws_tryhard_fr.zone_id
@@ -18,7 +18,7 @@ resource "aws_route53_record" "backend" {
 
 resource "aws_route53_record" "frontend" {
   allow_overwrite = true
-  name            = "p2-frontend.aws.tryhard.fr"
+  name            = "p2.aws.tryhard.fr"
   ttl             = 300
   type            = "CNAME"
   zone_id         = data.aws_route53_zone.aws_tryhard_fr.zone_id
@@ -33,7 +33,7 @@ resource "aws_route53_record" "frontend" {
 
 resource "aws_route53_record" "database" {
   allow_overwrite = true
-  name            = "p2-database.aws.tryhard.fr"
+  name            = "database.p2.aws.tryhard.fr"
   ttl             = 300
   type            = "CNAME"
   zone_id         = data.aws_route53_zone.aws_tryhard_fr.zone_id
