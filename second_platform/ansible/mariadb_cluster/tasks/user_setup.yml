@@ -14,18 +14,18 @@
     login_user: root
     login_password: ''
     login_unix_socket: /var/run/mysqld/mysqld.sock
-    name: tryhard
+    name: "{{ lookup('env', 'MARIADB_USER') }}"
     host: '%'
-    password: 1234
+    password: "{{ lookup('env', 'MARIADB_PASSWORD') }}"
     priv: '*.*:ALL,GRANT'
   when: inventory_hostname == 'database_1'
 
 - name: Create a new database with name 'mariondb'
   community.mysql.mysql_db:
     check_implicit_admin: yes
-    login_user: tryhard
-    login_password: 1234
-    name: mariondb
+    login_user: "{{ lookup('env', 'MARIADB_USER') }}"
+    login_password: "{{ lookup('env', 'MARIADB_PASSWORD') }}"
+    name: "{{ lookup('env', 'MARIADB_DATABASE') }}"
     state: present
     login_unix_socket: /var/run/mysqld/mysqld.sock
   when: inventory_hostname == 'database_1'
