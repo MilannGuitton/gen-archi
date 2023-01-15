@@ -1,6 +1,6 @@
 # -------------------------------------------------------- Records section --- #
 
-# ---------------------------------------------- p2-backend.aws.tryhard.fr --- #
+# ---------------------------------------------- backend.p2.aws.tryhard.fr --- #
 
 resource "aws_route53_record" "backend" {
   allow_overwrite = true
@@ -14,7 +14,7 @@ resource "aws_route53_record" "backend" {
   ]
 }
 
-# --------------------------------------------- p2-frontend.aws.tryhard.fr --- #
+# --------------------------------------------- p2.aws.tryhard.fr --- #
 
 resource "aws_route53_record" "frontend" {
   allow_overwrite = true
