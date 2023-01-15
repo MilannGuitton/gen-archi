@@ -8,8 +8,8 @@ module "vpc" {
 
   azs = var.vpc_azs
 
-  public_subnets   = [for k, v in var.vpc_azs : cidrsubnet(var.vpc_cidr, 8, k)]
-  private_subnets  = [for k, v in var.vpc_azs : cidrsubnet(var.vpc_cidr, 8, k + 3)]
+  public_subnets  = [for k, v in var.vpc_azs : cidrsubnet(var.vpc_cidr, 8, k)]
+  private_subnets = [for k, v in var.vpc_azs : cidrsubnet(var.vpc_cidr, 8, k + 3)]
 
   database_subnets = [for k, v in var.vpc_azs : cidrsubnet(var.vpc_cidr, 8, k + 6)]
 

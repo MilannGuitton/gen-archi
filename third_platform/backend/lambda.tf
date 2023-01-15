@@ -37,15 +37,15 @@ resource "aws_lambda_function" "health" {
   role          = aws_iam_role.lambda_spacelift.arn
   handler       = "index.lambda_handler"
   runtime       = "python3.8"
-  timeout = 10
+  timeout       = 10
   depends_on    = [aws_iam_role_policy_attachment.lambda_rds_access]
 
   layers = [aws_lambda_layer_version.pymysql.arn]
 
-  source_code_hash = "${data.archive_file.health.output_base64sha256}"
+  source_code_hash = data.archive_file.health.output_base64sha256
 
   vpc_config {
-   subnet_ids         = module.vpc.private_subnets
+    subnet_ids         = module.vpc.private_subnets
     security_group_ids = [module.sg_lambda_mysql.security_group_id]
   }
 
@@ -54,7 +54,7 @@ resource "aws_lambda_function" "health" {
       DB_NAME     = var.db_name
       DB_PASSWORD = var.db_password
       DB_USERNAME = var.db_username
-      DB_HOST = module.db_spacelift_mysql.db_instance_address
+      DB_HOST     = module.db_spacelift_mysql.db_instance_address
     }
   }
 }
@@ -74,15 +74,15 @@ resource "aws_lambda_function" "get" {
   role          = aws_iam_role.lambda_spacelift.arn
   handler       = "index.lambda_handler"
   runtime       = "python3.8"
-  timeout = 10
+  timeout       = 10
   depends_on    = [aws_iam_role_policy_attachment.lambda_rds_access]
 
   layers = [aws_lambda_layer_version.pymysql.arn]
 
-  source_code_hash = "${data.archive_file.health.output_base64sha256}"
+  source_code_hash = data.archive_file.health.output_base64sha256
 
   vpc_config {
-   subnet_ids         = module.vpc.private_subnets
+    subnet_ids         = module.vpc.private_subnets
     security_group_ids = [module.sg_lambda_mysql.security_group_id]
   }
 
@@ -91,7 +91,7 @@ resource "aws_lambda_function" "get" {
       DB_NAME     = var.db_name
       DB_PASSWORD = var.db_password
       DB_USERNAME = var.db_username
-      DB_HOST = module.db_spacelift_mysql.db_instance_address
+      DB_HOST     = module.db_spacelift_mysql.db_instance_address
     }
   }
 }
@@ -111,15 +111,15 @@ resource "aws_lambda_function" "post" {
   role          = aws_iam_role.lambda_spacelift.arn
   handler       = "index.lambda_handler"
   runtime       = "python3.8"
-  timeout = 10
+  timeout       = 10
   depends_on    = [aws_iam_role_policy_attachment.lambda_rds_access]
 
-  source_code_hash = "${data.archive_file.post.output_base64sha256}"
+  source_code_hash = data.archive_file.post.output_base64sha256
 
   layers = [aws_lambda_layer_version.pymysql.arn]
 
   vpc_config {
-   subnet_ids         = module.vpc.private_subnets
+    subnet_ids         = module.vpc.private_subnets
     security_group_ids = [module.sg_lambda_mysql.security_group_id]
   }
 
@@ -128,7 +128,7 @@ resource "aws_lambda_function" "post" {
       DB_NAME     = var.db_name
       DB_PASSWORD = var.db_password
       DB_USERNAME = var.db_username
-      DB_HOST = module.db_spacelift_mysql.db_instance_address
+      DB_HOST     = module.db_spacelift_mysql.db_instance_address
     }
   }
 }
@@ -148,14 +148,14 @@ resource "aws_lambda_function" "tcp_ping" {
   role          = aws_iam_role.lambda_spacelift.arn
   handler       = "index.lambda_handler"
   runtime       = "python3.8"
-  timeout = 10
+  timeout       = 10
 
-  depends_on    = [aws_iam_role_policy_attachment.lambda_rds_access]
+  depends_on = [aws_iam_role_policy_attachment.lambda_rds_access]
 
-  source_code_hash = "${data.archive_file.tcp_ping.output_base64sha256}"
+  source_code_hash = data.archive_file.tcp_ping.output_base64sha256
 
   vpc_config {
     subnet_ids         = module.vpc.private_subnets
-  security_group_ids = [module.sg_lambda_mysql.security_group_id]
+    security_group_ids = [module.sg_lambda_mysql.security_group_id]
   }
 }

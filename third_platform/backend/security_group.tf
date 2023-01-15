@@ -32,20 +32,20 @@ module "sg_db_mysql" {
 
   ingress_with_source_security_group_id = [
     {
-    from_port   = 3306
-    to_port     = 3306
-    protocol    = "TCP"
-    description = "MySQL ingress access from lambda"
-    source_security_group_id = module.sg_lambda_mysql.security_group_id
+      from_port                = 3306
+      to_port                  = 3306
+      protocol                 = "TCP"
+      description              = "MySQL ingress access from lambda"
+      source_security_group_id = module.sg_lambda_mysql.security_group_id
     },
   ]
 
   egress_with_source_security_group_id = [
     {
-      from_port   = 0
-      to_port     = 0
-      protocol    = "TCP"
-      description = "Allow egress TCP to lambda"
+      from_port                = 0
+      to_port                  = 0
+      protocol                 = "TCP"
+      description              = "Allow egress TCP to lambda"
       source_security_group_id = module.sg_lambda_mysql.security_group_id
     }
   ]

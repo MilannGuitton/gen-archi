@@ -23,7 +23,7 @@ variable "subdomain_name" {
 # ------------------------------------------------------------------- VPC --- #
 
 variable "vpc_name" {
-  type    = string
+  type = string
 }
 
 variable "vpc_cidr" {
@@ -37,7 +37,7 @@ variable "subnet_cidr" {
 }
 
 variable "vpc_azs" {
-  type    = list(string)
+  type = list(string)
 }
 
 
