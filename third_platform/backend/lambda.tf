@@ -23,6 +23,33 @@ resource "aws_lambda_layer_version" "pymysql" {
 }
 
 
+# ------------------------------------------------------------------- Ping --- #
+
+data "archive_file" "tcp_ping" {
+  type        = "zip"
+  source_dir  = "${path.module}/lambda/src/tcp_ping"
+  output_path = "${path.module}/lambda/src/tcp_ping.zip"
+}
+
+resource "aws_lambda_function" "tcp_ping" {
+  filename      = "${path.module}/lambda/src/tcp_ping.zip"
+  function_name = "${var.project_name}-tcp_ping"
+  role          = aws_iam_role.lambda_spacelift.arn
+  handler       = "index.lambda_handler"
+  runtime       = "python3.8"
+  timeout       = 10
+
+  depends_on = [aws_iam_role_policy_attachment.lambda_rds_access]
+
+  source_code_hash = data.archive_file.tcp_ping.output_base64sha256
+
+  vpc_config {
+    subnet_ids         = module.vpc.private_subnets
+    security_group_ids = [module.sg_lambda_mysql.security_group_id]
+  }
+}
+
+
 # ----------------------------------------------------------------- Health --- #
 
 data "archive_file" "health" {
@@ -130,32 +157,5 @@ resource "aws_lambda_function" "post" {
       DB_USERNAME = var.db_username
       DB_HOST     = module.db_spacelift_mysql.db_instance_address
     }
-  }
-}
-
-
-# ------------------------------------------------------------------- Ping --- #
-
-data "archive_file" "tcp_ping" {
-  type        = "zip"
-  source_dir  = "${path.module}/lambda/src/tcp_ping"
-  output_path = "${path.module}/lambda/src/tcp_ping.zip"
-}
-
-resource "aws_lambda_function" "tcp_ping" {
-  filename      = "${path.module}/lambda/src/tcp_ping.zip"
-  function_name = "${var.project_name}-tcp_ping"
-  role          = aws_iam_role.lambda_spacelift.arn
-  handler       = "index.lambda_handler"
-  runtime       = "python3.8"
-  timeout       = 10
-
-  depends_on = [aws_iam_role_policy_attachment.lambda_rds_access]
-
-  source_code_hash = data.archive_file.tcp_ping.output_base64sha256
-
-  vpc_config {
-    subnet_ids         = module.vpc.private_subnets
-    security_group_ids = [module.sg_lambda_mysql.security_group_id]
   }
 }
