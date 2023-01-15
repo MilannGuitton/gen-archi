@@ -33,8 +33,7 @@ data "archive_file" "health" {
 
 resource "aws_lambda_function" "health" {
   filename      = "${path.module}/lambda/src/health.zip"
-  # Rename function name
-  function_name = "lambda_function_health"
+  function_name = "${var.project_name}-health"
   role          = aws_iam_role.lambda_spacelift.arn
   handler       = "index.lambda_handler"
   runtime       = "python3.8"
@@ -72,7 +71,7 @@ data "archive_file" "get" {
 
 resource "aws_lambda_function" "get" {
   filename      = "${path.module}/lambda/src/get.zip"
-  function_name = "lambda_function_get"
+  function_name = "${var.project_name}-get"
   role          = aws_iam_role.lambda_spacelift.arn
   handler       = "index.lambda_handler"
   runtime       = "python3.8"
@@ -109,7 +108,7 @@ data "archive_file" "post" {
 
 resource "aws_lambda_function" "post" {
   filename      = "${path.module}/lambda/src/post.zip"
-  function_name = "lambda_function_post"
+  function_name = "${var.project_name}-post"
   role          = aws_iam_role.lambda_spacelift.arn
   handler       = "index.lambda_handler"
   runtime       = "python3.8"
@@ -146,7 +145,7 @@ data "archive_file" "test" {
 
 resource "aws_lambda_function" "test" {
   filename      = "${path.module}/lambda/src/test.zip"
-  function_name = "lambda_function_test"
+  function_name = "${var.project_name}-test"
   role          = aws_iam_role.lambda_spacelift.arn
   handler       = "index.lambda_handler"
   runtime       = "python3.8"
