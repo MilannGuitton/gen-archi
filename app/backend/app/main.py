@@ -1,7 +1,6 @@
 from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
 from fastapi import Request
-from dotenv import load_dotenv
 import sys, os, json, mariadb
 
 app = FastAPI()
@@ -15,12 +14,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-load_dotenv()
-
 mariadb_user = os.getenv("MARIADB_USER")
 mariadb_password = os.getenv("MARIADB_PASSWORD")
 mariadb_host = os.getenv("MARIADB_HOST")
 mariadb_port = os.getenv("MARIADB_PORT")
+mariadb_database= os.getenv("MARIADB_DATABASE")
 
 try:
     conn = mariadb.connect(
@@ -28,7 +26,7 @@ try:
         password=mariadb_password,
         host=mariadb_host,
         port=int(mariadb_port),
-        database="mariondb",
+        database=mariadb_database,
         autocommit=True
     )
 except mariadb.Error as e:
