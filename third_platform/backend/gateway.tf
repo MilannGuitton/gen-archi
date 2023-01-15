@@ -13,10 +13,40 @@ resource "aws_apigatewayv2_stage" "default" {
   auto_deploy = true
 }
 
-resource "aws_lambda_permission" "api_gw" {
+
+# ------------------------------------------------------------- Permission --- #
+
+resource "aws_lambda_permission" "api_gw_health" {
   statement_id  = "AllowExecutionFromAPIGateway"
   action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.health.function_name
+  principal     = "apigateway.amazonaws.com"
+
+  source_arn = "${aws_apigatewayv2_api.genarchi.execution_arn}/*/*"
+}
+
+resource "aws_lambda_permission" "api_gw_tcp_ping" {
+  statement_id  = "AllowExecutionFromAPIGateway"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.tcp_ping.function_name
+  principal     = "apigateway.amazonaws.com"
+
+  source_arn = "${aws_apigatewayv2_api.genarchi.execution_arn}/*/*"
+}
+
+resource "aws_lambda_permission" "api_gw_get" {
+  statement_id  = "AllowExecutionFromAPIGateway"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.get.function_name
+  principal     = "apigateway.amazonaws.com"
+
+  source_arn = "${aws_apigatewayv2_api.genarchi.execution_arn}/*/*"
+}
+
+resource "aws_lambda_permission" "api_gw_post" {
+  statement_id  = "AllowExecutionFromAPIGateway"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.post.function_name
   principal     = "apigateway.amazonaws.com"
 
   source_arn = "${aws_apigatewayv2_api.genarchi.execution_arn}/*/*"
@@ -49,6 +79,14 @@ resource "aws_apigatewayv2_integration" "lambda_health" {
   integration_method = "POST"
 }
 
+resource "aws_apigatewayv2_integration" "lambda_tcp_ping" {
+  api_id = aws_apigatewayv2_api.genarchi.id
+
+  integration_uri    = aws_lambda_function.tcp_ping.invoke_arn
+  integration_type   = "AWS_PROXY"
+  integration_method = "POST"
+}
+
 
 # ----------------------------------------------------------------- Routes --- #
 
@@ -71,6 +109,13 @@ resource "aws_apigatewayv2_route" "get_health" {
 
   route_key = "GET /health"
   target    = "integrations/${aws_apigatewayv2_integration.lambda_health.id}"
+}
+
+resource "aws_apigatewayv2_route" "get_tcp_ping" {
+  api_id = aws_apigatewayv2_api.genarchi.id
+
+  route_key = "GET /tcp_ping"
+  target    = "integrations/${aws_apigatewayv2_integration.lambda_tcp_ping.id}"
 }
 
 

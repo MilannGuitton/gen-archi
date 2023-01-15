@@ -1,17 +1,3 @@
-# ----------------------------------------------------------------- Locals --- #
-
-locals {
-  username = "admin"
-  password = "tryhardpassword"
-  endpoint = module.db.db_instance_endpoint
-
-  tags = {
-    Name        = "Spacelift"
-    Environment = "Spacelift"
-  }
-}
-
-
 # ------------------------------------------------------------------ Shell --- #
 
 resource "null_resource" "build_lambda_layers" {
@@ -47,17 +33,28 @@ data "archive_file" "health" {
 
 resource "aws_lambda_function" "health" {
   filename      = "${path.module}/lambda/src/health.zip"
-  function_name = "lambda_function_health"
+  function_name = "${var.project_name}-health"
   role          = aws_iam_role.lambda_spacelift.arn
   handler       = "index.lambda_handler"
   runtime       = "python3.8"
+  timeout       = 10
   depends_on    = [aws_iam_role_policy_attachment.lambda_rds_access]
 
-  source_code_hash = filebase64sha256("${path.module}/lambda/src/health.zip")
+  layers = [aws_lambda_layer_version.pymysql.arn]
+
+  source_code_hash = data.archive_file.health.output_base64sha256
+
+  vpc_config {
+    subnet_ids         = module.vpc.private_subnets
+    security_group_ids = [module.sg_lambda_mysql.security_group_id]
+  }
 
   environment {
     variables = {
-      NAME = local.name
+      DB_NAME     = var.db_name
+      DB_PASSWORD = var.db_password
+      DB_USERNAME = var.db_username
+      DB_HOST     = module.db_spacelift_mysql.db_instance_address
     }
   }
 }
@@ -73,21 +70,28 @@ data "archive_file" "get" {
 
 resource "aws_lambda_function" "get" {
   filename      = "${path.module}/lambda/src/get.zip"
-  function_name = "lambda_function_get"
+  function_name = "${var.project_name}-get"
   role          = aws_iam_role.lambda_spacelift.arn
   handler       = "index.lambda_handler"
   runtime       = "python3.8"
+  timeout       = 10
   depends_on    = [aws_iam_role_policy_attachment.lambda_rds_access]
 
   layers = [aws_lambda_layer_version.pymysql.arn]
 
-  source_code_hash = filebase64sha256("${path.module}/lambda/src/get.zip")
+  source_code_hash = data.archive_file.health.output_base64sha256
+
+  vpc_config {
+    subnet_ids         = module.vpc.private_subnets
+    security_group_ids = [module.sg_lambda_mysql.security_group_id]
+  }
 
   environment {
     variables = {
-      NAME     = local.name
-      PASSWORD = local.password
-      ENDPOINT = local.endpoint
+      DB_NAME     = var.db_name
+      DB_PASSWORD = var.db_password
+      DB_USERNAME = var.db_username
+      DB_HOST     = module.db_spacelift_mysql.db_instance_address
     }
   }
 }
@@ -103,21 +107,55 @@ data "archive_file" "post" {
 
 resource "aws_lambda_function" "post" {
   filename      = "${path.module}/lambda/src/post.zip"
-  function_name = "lambda_function_post"
+  function_name = "${var.project_name}-post"
   role          = aws_iam_role.lambda_spacelift.arn
   handler       = "index.lambda_handler"
   runtime       = "python3.8"
+  timeout       = 10
   depends_on    = [aws_iam_role_policy_attachment.lambda_rds_access]
 
-  source_code_hash = filebase64sha256("${path.module}/lambda/src/post.zip")
+  source_code_hash = data.archive_file.post.output_base64sha256
 
   layers = [aws_lambda_layer_version.pymysql.arn]
 
+  vpc_config {
+    subnet_ids         = module.vpc.private_subnets
+    security_group_ids = [module.sg_lambda_mysql.security_group_id]
+  }
+
   environment {
     variables = {
-      NAME     = local.name
-      PASSWORD = local.password
-      ENDPOINT = local.endpoint
+      DB_NAME     = var.db_name
+      DB_PASSWORD = var.db_password
+      DB_USERNAME = var.db_username
+      DB_HOST     = module.db_spacelift_mysql.db_instance_address
     }
+  }
+}
+
+
+# ------------------------------------------------------------------- Ping --- #
+
+data "archive_file" "tcp_ping" {
+  type        = "zip"
+  source_dir  = "${path.module}/lambda/src/tcp_ping"
+  output_path = "${path.module}/lambda/src/tcp_ping.zip"
+}
+
+resource "aws_lambda_function" "tcp_ping" {
+  filename      = "${path.module}/lambda/src/tcp_ping.zip"
+  function_name = "${var.project_name}-tcp_ping"
+  role          = aws_iam_role.lambda_spacelift.arn
+  handler       = "index.lambda_handler"
+  runtime       = "python3.8"
+  timeout       = 10
+
+  depends_on = [aws_iam_role_policy_attachment.lambda_rds_access]
+
+  source_code_hash = data.archive_file.tcp_ping.output_base64sha256
+
+  vpc_config {
+    subnet_ids         = module.vpc.private_subnets
+    security_group_ids = [module.sg_lambda_mysql.security_group_id]
   }
 }
