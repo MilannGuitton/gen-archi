@@ -30,6 +30,10 @@ SSH_HOSTS_FILE="$HOME/.ssh/known_hosts"
 FRONT_CONFIG_FILE="$PWD/../app/frontend/config.js"
 
 
+################################################################################
+###                                  UTILS                                   ###
+################################################################################
+
 # Set environment variables for mariadb
 
 set_env() {
@@ -64,6 +68,7 @@ set_env() {
     fi
 }
 
+
 ################################################################################
 ###                                 CREATE                                   ###
 ################################################################################
@@ -77,6 +82,7 @@ deploy_terraform() {
 
 run_ansible() {
     set_env
+    echo "https://p2.aws.tryhard.fr" > "$FRONT_CONFIG_FILE"
     cd "$ANSIBLE_FOLDER"
     keyscan=`ssh-keyscan -H $BASTION_IP`
     if [ -z "$keyscan" ]; then
@@ -89,6 +95,7 @@ run_ansible() {
     echo 'export const ENDPOINT = "https://p2-backend.aws.tryhard.fr";' > "$FRONT_CONFIG_FILE"
     ansible-playbook "$FRONT_SCRIPT"
     ansible-playbook "$BACK_SCRIPT"
+    echo "https://p3.aws.tryhard.fr" > "$FRONT_CONFIG_FILE"
     cd ..
 }
 
