@@ -13,6 +13,9 @@ resource "aws_apigatewayv2_stage" "default" {
   auto_deploy = true
 }
 
+
+# ------------------------------------------------------------- Permission --- #
+
 resource "aws_lambda_permission" "api_gw_health" {
   statement_id  = "AllowExecutionFromAPIGateway"
   action        = "lambda:InvokeFunction"

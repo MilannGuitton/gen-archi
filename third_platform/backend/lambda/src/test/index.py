@@ -5,6 +5,22 @@ import socket
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
+
+def response_with(status_code, message=None, content_type="text/html"):
+    if content_type == "application/json":
+        body = json.dumps(message)
+    else:
+        body = message
+
+    response = {
+        "statusCode": status_code,
+        "headers": {'Content-Type': content_type},
+        "body": body
+    }
+
+    return response
+
+
 def ping(host, port):
 
     # to ping a particular PORT at an IP
@@ -27,15 +43,9 @@ def ping(host, port):
         s.connect(server_address)
 
     except OSError as error:
-
-        # function returning false after
-        # data interruption(no connection)
         logger.error("Could not connect")
         return False
     else:
-
-        # the connection is closed after
-        # machine being connected
         logger.info("Connect is ok")
         s.close()
         return True
@@ -44,11 +54,5 @@ def ping(host, port):
 def lambda_handler(event, context):
     is_google_ok = ping("8.8.8.8", 53)
     is_mysql_ok = ping("spacelift.ct51s2fxxugy.eu-west-3.rds.amazonaws.com", 3306)
-    response = {
-            "statusCode": 200,
-            "body": f"Can I ping google ? {is_google_ok}   |   Can I ping my db ? {is_mysql_ok}",
-            "headers": {
-                'Content-Type': 'text/html',
-                }
-            }
-    return response
+    return response_with(200, f"Can I ping google ? {is_google_ok}   |   " +
+                              f"Can I ping my db ? {is_mysql_ok}")

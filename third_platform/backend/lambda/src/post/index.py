@@ -1,7 +1,7 @@
-import sys
 import logging
 import pymysql
 import os
+import json
 
 db_host = os.getenv('DB_HOST')
 db_name = os.getenv('DB_NAME')
@@ -12,18 +12,27 @@ logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
 
-def response_with(status_code):
+def response_with(status_code, message=None, content_type="text/html"):
+    if content_type == "application/json":
+        body = json.dumps(message)
+    else:
+        body = message
+
     response = {
-        "status_code": status_code,
-        "headers": {
-            'Content-Type': 'text/html',
-        }
+        "statusCode": status_code,
+        "headers": {'Content-Type': content_type},
+        "body": body
     }
 
     return response
 
 
 def lambda_handler(event, context):
+    data = json.loads(event["body"])
+
+    if not data["name"] or not data["score"]:
+        return response_with(400, "Invalid arguments")
+
     try:
         connection = pymysql.connect(
             host=db_host,
@@ -45,14 +54,12 @@ def lambda_handler(event, context):
         with connection:
             with connection.cursor() as cursor:
                 cursor.execute("CREATE TABLE IF NOT EXISTS scores (id SERIAL PRIMARY KEY, name VARCHAR(100), score INT)")
-                logger.info(f'Inserting ---> name: {event["name"]} | score: {event["score"]}')
+                logger.info(f'Inserting ---> name: {data["name"]} | score: {data["score"]}')
                 sql = "INSERT INTO scores (name, score) VALUES (%s, %s)"
-                cursor.execute(sql, (event["name"], event["score"]))
+                cursor.execute(sql, (data["name"], data["score"]))
                 logger.info("Insert done")
     except pymysql.MySQLError as e:
         logger.error(e)
         return response_with(400)
 
-
-    return response_with(200)
-
+    return response_with(200, "Insert done")
