@@ -1,9 +1,8 @@
 from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
 from fastapi import Request
-import mariadb
-import sys
-import json
+from dotenv import load_dotenv
+import sys, os, json, mariadb
 
 app = FastAPI()
 origins = ["*"]
@@ -16,12 +15,19 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+load_dotenv()
+
+mariadb_user = os.getenv("MARIADB_USER")
+mariadb_password = os.getenv("MARIADB_PASSWORD")
+mariadb_host = os.getenv("MARIADB_HOST")
+mariadb_port = os.getenv("MARIADB_PORT")
+
 try:
     conn = mariadb.connect(
-        user="tryhard",
-        password="1234",
-        host="p2-database.aws.tryhard.fr",
-        port=80,
+        user=mariadb_user,
+        password=mariadb_password,
+        host=mariadb_host,
+        port=int(mariadb_port),
         database="mariondb",
         autocommit=True
     )
