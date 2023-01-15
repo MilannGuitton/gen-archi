@@ -2,22 +2,22 @@
 - hosts: backend
   become: true
   tasks:
-      - name: Copy file to remote host
-        ansible.builtin.copy:
-            src: ./../../../app/backend/
-            dest: /home/ubuntu/backend
-      - name: install python3
-        apt: name=python3
-      - name: install pip
-        apt: name=python3-pip
-      - name: install libmariadb3
-        apt: name=libmariadb3
-      - name: install libmariadb-dev
-        apt: name=libmariadb-dev
-      - name: Install specified Python requirements
-        ansible.builtin.pip:
-          requirements: /home/ubuntu/backend/requirements.txt
-      - name: Run Gunicorn server
-        command: /usr/local/bin/gunicorn -w 1 -k uvicorn.workers.UvicornWorker "main:app" --bind 0.0.0.0:8000 --daemon
-        args:
-          chdir: /home/ubuntu/backend/app/
+    - name: Copy file to remote host
+      ansible.builtin.copy:
+        src: ./../../../app/backend/
+        dest: /home/ubuntu/backend
+    - name: install python3
+      apt: name=python3
+    - name: install pip
+      apt: name=python3-pip
+    - name: install libmariadb3
+      apt: name=libmariadb3
+    - name: install libmariadb-dev
+      apt: name=libmariadb-dev
+    - name: Install specified Python requirements
+      ansible.builtin.pip:
+        requirements: /home/ubuntu/backend/requirements.txt
+    - name: Run Gunicorn server
+      command: /usr/local/bin/gunicorn -w 1 -k uvicorn.workers.UvicornWorker "main:app" --bind 0.0.0.0:8000 --daemon
+      args:
+        chdir: /home/ubuntu/backend/app/
