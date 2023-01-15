@@ -61,7 +61,7 @@ set_env() {
         echo "export MARIADB_DATABASE=$MARIADB_DATABASE" >> "$ENV_FILE"
     fi
     if [ -z "$MARIADB_HOST" ]; then
-        export MARIADB_HOST="p2-database.aws.tryhard.fr"
+        export MARIADB_HOST="database.p2.aws.tryhard.fr"
         echo "export MARIADB_HOST=$MARIADB_HOST" >> "$ENV_FILE"
     fi
     if [ -z "$MARIADB_PORT" ]; then

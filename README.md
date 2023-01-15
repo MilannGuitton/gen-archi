@@ -17,7 +17,7 @@ By default, the database is created with some credentials in order to avoid cras
 #!/bin/sh
 export MARIADB_USER=tryhard #  The MariaDB username.
 export MARIADB_PASSWORD=1234 # The password for the user.
-export MARIADB_HOST=p2-database.aws.tryhard.fr # The endpoint associated with the database.
+export MARIADB_HOST=database.p2.aws.tryhard.fr # The endpoint associated with the database.
 export MARIADB_DATABASE=mariondb # The name of the database.
 export MARIADB_PORT=80 # The port associated with the database.
 ```
