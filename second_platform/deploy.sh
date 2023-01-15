@@ -30,6 +30,26 @@ SSH_HOSTS_FILE="$HOME/.ssh/known_hosts"
 FRONT_CONFIG_FILE="$PWD/../app/frontend/config.js"
 
 
+# Set environment variables for mariadb
+
+ENV_FILE=".env"
+# If .env file already exists, use variables from it
+if [ -f "$ENV_FILE" ]; then
+    source "$ENV_FILE"
+else
+    # Else set defaults
+    export MARIADB_USER="tryhard"
+    export MARIADB_PASSWORD="1234"
+    export MARIADB_HOST="p2-database.aws.tryhard.fr"
+    export MARIADB_PORT="80"
+    export MARIADB_DATABASE="mariondb"
+    echo "MARIADB_USER=$MARIADB_USER" > "$ENV_FILE"
+    echo "MARIADB_PASSWORD=$MARIADB_PASSWORD" >> "$ENV_FILE"
+    echo "MARIADB_DATABASE=$MARIADB_DATABASE" >> "$ENV_FILE"
+    echo "MARIADB_HOST=p2-database.aws.tryhard.fr" >> "$ENV_FILE"
+    echo "MARIADB_PORT=80" >> "$ENV_FILE"
+fi
+
 ################################################################################
 ###                                 CREATE                                   ###
 ################################################################################
@@ -42,8 +62,6 @@ deploy_terraform() {
 }
 
 run_ansible() {
-    echo "Waiting for hosts to be ready..."
-    sleep 10
     cd "$ANSIBLE_FOLDER"
     keyscan=`ssh-keyscan -H $BASTION_IP`
     if [ -z "$keyscan" ]; then
