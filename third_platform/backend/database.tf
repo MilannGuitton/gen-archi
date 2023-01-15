@@ -8,7 +8,7 @@ module "db_spacelift_mysql" {
   create_db_option_group    = false
   create_db_parameter_group = false
 
-  publicly_accessible = true
+  publicly_accessible = false
 
   engine               = "mysql"
   engine_version       = "8.0"
