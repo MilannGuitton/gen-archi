@@ -122,7 +122,7 @@ resource "aws_apigatewayv2_route" "post_root" {
 # ------------------------------------------------------------ Domain name --- #
 
 resource "aws_apigatewayv2_domain_name" "genarchi" {
-  domain_name = "backend.p3.${var.subdomain_name}${var.domain_name}"
+  domain_name = "backend.${var.subdomain_name}${var.domain_name}"
 
   domain_name_configuration {
     certificate_arn = aws_acm_certificate.cert_backend_p3.arn
