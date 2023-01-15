@@ -8,7 +8,7 @@ export LAYER_MYSQL="layer_pymysql"
 #Init Packages Directory
 mkdir -p packages/
 
-# Building Python-pandas layer
+# Building pymysql layer
 cd ${WORKDIR}/${LAYER_MYSQL}/
 ./build_layer.sh
 

@@ -17,7 +17,7 @@ module "vpc" {
 
   enable_nat_gateway     = true
   single_nat_gateway     = true
-  one_nat_gateway_per_az = false
+  #one_nat_gateway_per_az = false
 
   enable_vpn_gateway = false
 

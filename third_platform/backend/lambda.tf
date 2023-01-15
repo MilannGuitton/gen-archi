@@ -40,6 +40,12 @@ resource "aws_lambda_function" "health" {
   depends_on    = [aws_iam_role_policy_attachment.lambda_rds_access]
 
   source_code_hash = filebase64sha256("${path.module}/lambda/src/health.zip")
+  # source_code_hash = "${data.archive_file.health.output_base64sha256}"
+
+  vpc_config {
+   subnet_ids         = module.vpc.private_subnets
+    security_group_ids = [module.sg_lambda_mysql.security_group_id]
+  }
 }
 
 
@@ -63,11 +69,17 @@ resource "aws_lambda_function" "get" {
 
   source_code_hash = filebase64sha256("${path.module}/lambda/src/get.zip")
 
+  vpc_config {
+   subnet_ids         = module.vpc.private_subnets
+    security_group_ids = [module.sg_lambda_mysql.security_group_id]
+  }
+
   environment {
     variables = {
       NAME     = var.db_name
       PASSWORD = var.db_password
-      ENDPOINT = module.db_spacelift_mysql.db_instance_endpoint
+      ENDPOINT = module.db_spacelift_mysql.db_instance_address
+      #ENDPOINT = module.db_spacelift_mysql.db_instance_endpoint
     }
   }
 }
@@ -93,11 +105,45 @@ resource "aws_lambda_function" "post" {
 
   layers = [aws_lambda_layer_version.pymysql.arn]
 
+  vpc_config {
+   subnet_ids         = module.vpc.private_subnets
+    security_group_ids = [module.sg_lambda_mysql.security_group_id]
+  }
+
   environment {
     variables = {
-      NAME     = var.db_name
-      PASSWORD = var.db_password
-      ENDPOINT = module.db_spacelift_mysql.db_instance_endpoint
+      DB_NAME     = var.db_name
+      DB_PASSWORD = var.db_password
+      DB_USERNAME = var.db_username
+      DB_HOST = module.db_spacelift_mysql.db_instance_address
+      #ENDPOINT = module.db_spacelift_mysql.db_instance_endpoint
     }
+  }
+}
+
+
+# ------------------------------------------------------------------- test --- #
+
+data "archive_file" "test" {
+  type        = "zip"
+  source_dir  = "${path.module}/lambda/src/test"
+  output_path = "${path.module}/lambda/src/test.zip"
+}
+
+resource "aws_lambda_function" "test" {
+  filename      = "${path.module}/lambda/src/test.zip"
+  function_name = "lambda_function_test"
+  role          = aws_iam_role.lambda_spacelift.arn
+  handler       = "index.lambda_handler"
+  runtime       = "python3.8"
+  timeout = 10
+
+  depends_on    = [aws_iam_role_policy_attachment.lambda_rds_access]
+
+  source_code_hash = filebase64sha256("${path.module}/lambda/src/test.zip")
+
+  vpc_config {
+    subnet_ids         = module.vpc.private_subnets
+  security_group_ids = [module.sg_lambda_mysql.security_group_id]
   }
 }

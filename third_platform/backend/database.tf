@@ -8,6 +8,8 @@ module "db_spacelift_mysql" {
   create_db_option_group    = false
   create_db_parameter_group = false
 
+  publicly_accessible = true
+
   engine               = "mysql"
   engine_version       = "8.0"
   family               = "mysql8.0" # DB parameter group
@@ -24,7 +26,7 @@ module "db_spacelift_mysql" {
 
   db_subnet_group_name = module.vpc.database_subnet_group
 
-  vpc_security_group_ids = [module.sg_mysql.security_group_id]
+  vpc_security_group_ids = [module.sg_db_mysql.security_group_id]
 
   maintenance_window = null
   backup_window      = null
