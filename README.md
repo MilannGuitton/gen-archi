@@ -10,3 +10,16 @@ At the root of the `second_platform` directory is a script to automate the deplo
 ```bash
 bash deploy.sh -h
 ```
+
+By default, the database is created with some credentials in order to avoid crashes during deployment. To change this configuration, you can create a `.env` file at the root of the `second_platform` directory with the following format:
+
+```bash
+#!/bin/sh
+export MARIADB_USER=tryhard #  The MariaDB username.
+export MARIADB_PASSWORD=1234 # The password for the user.
+export MARIADB_HOST=p2-database.aws.tryhard.fr # The endpoint associated with the database.
+export MARIADB_DATABASE=mariondb # The name of the database.
+export MARIADB_PORT=80 # The port associated with the database.
+```
+
+Default values are the ones specified in the example above.
