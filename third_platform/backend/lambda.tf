@@ -42,8 +42,7 @@ resource "aws_lambda_function" "health" {
 
   layers = [aws_lambda_layer_version.pymysql.arn]
 
-  source_code_hash = filebase64sha256("${path.module}/lambda/src/health.zip")
-  # source_code_hash = "${data.archive_file.health.output_base64sha256}"
+  source_code_hash = "${data.archive_file.health.output_base64sha256}"
 
   vpc_config {
    subnet_ids         = module.vpc.private_subnets
@@ -80,7 +79,7 @@ resource "aws_lambda_function" "get" {
 
   layers = [aws_lambda_layer_version.pymysql.arn]
 
-  source_code_hash = filebase64sha256("${path.module}/lambda/src/get.zip")
+  source_code_hash = "${data.archive_file.health.output_base64sha256}"
 
   vpc_config {
    subnet_ids         = module.vpc.private_subnets
@@ -115,7 +114,7 @@ resource "aws_lambda_function" "post" {
   timeout = 10
   depends_on    = [aws_iam_role_policy_attachment.lambda_rds_access]
 
-  source_code_hash = filebase64sha256("${path.module}/lambda/src/post.zip")
+  source_code_hash = "${data.archive_file.post.output_base64sha256}"
 
   layers = [aws_lambda_layer_version.pymysql.arn]
 
@@ -153,7 +152,7 @@ resource "aws_lambda_function" "test" {
 
   depends_on    = [aws_iam_role_policy_attachment.lambda_rds_access]
 
-  source_code_hash = filebase64sha256("${path.module}/lambda/src/test.zip")
+  source_code_hash = "${data.archive_file.test.output_base64sha256}"
 
   vpc_config {
     subnet_ids         = module.vpc.private_subnets
