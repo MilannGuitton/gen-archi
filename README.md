@@ -23,3 +23,15 @@ export MARIADB_PORT=80 # The port associated with the database.
 ```
 
 Default values are the ones specified in the example above.
+
+## Third platform
+
+The entirery of the infrastructure is deployed using [Terraform](https://registry.terraform.io/providers/hashicorp/aws/latest). It is composed of two parts, frontend and backend. All the code for the third platform is in the corresponding `third_platform` folder.
+
+To deploy it, you must first be in the folder mentionned above. From here, go in the `frontend` and `backend` folders and run:
+
+```bash
+terraform init
+terraform apply
+```
+
